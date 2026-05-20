@@ -3,8 +3,8 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, MapPin, Users, BookOpen, GraduationCap } from 'lucide-react'
-import Picture from '@/app/components/common/Picture'
-import { fadeUp, staggerContainer } from '@/app/lib/constants/motion'
+import Picture from '@/app/components/ui/media/Picture'
+import { fadeUp, staggerContainer } from '@/app/lib/constants/motion.constants'
 
 const milestones = [
   {

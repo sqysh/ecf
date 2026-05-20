@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Check, Heart, RefreshCw, Receipt, ArrowRight } from 'lucide-react'
 import { IOrder } from '@/types/entities/order'
-import { fadeUp } from '@/app/lib/constants/motion'
+import { fadeUp } from '@/app/lib/constants/motion.constants'
 import { formatDate } from '@/app/lib/utils/date.utils'
 import { formatTime } from '@/app/lib/utils/time.utils'
 

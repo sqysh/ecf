@@ -1,4 +1,4 @@
-import DonateCheckoutClient from '@/app/components/pages/DonateCheckoutClient'
+import DonateCheckoutClient from '@/app/(public)/donate/DonateCheckoutClient'
 import { getSavedPaymentMethods } from '@/app/lib/actions/getSavedPaymentMethods'
 import { getUserName } from '@/app/lib/actions/getUserName'
 

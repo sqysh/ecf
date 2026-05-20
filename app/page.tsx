@@ -1,11 +1,11 @@
-import { Hero } from './components/Hero'
-import OutOfSchoolLearning from './components/home/OutOfSchoolLearning'
-import ByTheNumbers from './components/home/ByTheNumbers'
-import MarqueeSponsors from './components/MarqueeSponsors'
-import RealStories from './components/home/RealStories'
-import OurHistory from './components/home/OurHistory'
 import LogoIconLight from '@/public/svg/LogoIconLight'
 import LogoIconDark from '@/public/svg/LogoIconDark'
+import { Hero } from './components/layout/Hero'
+import MarqueeSponsors from './components/layout/MarqueeSponsors'
+import OutOfSchoolLearning from './components/features/home/OutOfSchoolLearning'
+import ByTheNumbers from './components/features/home/ByTheNumbers'
+import RealStories from './components/features/home/RealStories'
+import OurHistory from './(public)/who-we-are/history/page'
 
 export default function Home() {
   return (

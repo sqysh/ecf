@@ -3,7 +3,6 @@
 import { combineReducers } from 'redux'
 import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
-import { api } from './api'
 import { uiReducer } from './slices/uiSlice'
 import { formReducer } from './slices/formSlice'
 import { toastReducer } from './slices/toastSlice'
@@ -11,8 +10,7 @@ import { toastReducer } from './slices/toastSlice'
 const rootReducer = combineReducers({
   ui: uiReducer,
   form: formReducer,
-  toast: toastReducer,
-  [api.reducerPath]: api.reducer
+  toast: toastReducer
 })
 
 export const store = configureStore({
@@ -21,7 +19,7 @@ export const store = configureStore({
     getDefaultMiddleware({
       immutableCheck: false,
       serializableCheck: false
-    }).concat(api.middleware)
+    })
 })
 
 export type RootState = ReturnType<typeof store.getState>

@@ -5,7 +5,7 @@ import { createSubscriptionWithSavedCard } from '../actions/createSubscriptionWi
 import { createSetupIntentForSubscription } from '../actions/createSetupIntentForSubscription'
 import { createSubscriptionAfterSetup } from '../actions/createSubscriptionAfterSetup'
 import { usePaymentProcessor } from './usePaymentProcessor'
-import { setDonateCheckoutForm as setForm } from '../utils/setDonateCheckoutForm'
+import { setDonateCheckoutForm as setForm } from '../utils/donate.utils'
 
 export function useDonationSubmit({ inputs, finalAmount, feesCovered, usingSavedCard, fullName }: any) {
   const stripe = useStripe()

@@ -1,6 +1,6 @@
 'use client'
 
-import { fadeUp, staggerContainer } from '@/app/lib/constants/motion'
+import { fadeUp, staggerContainer } from '@/app/lib/constants/motion.constants'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'

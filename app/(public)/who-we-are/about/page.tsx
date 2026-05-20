@@ -1,7 +1,7 @@
 'use client'
 
-import Picture from '@/app/components/common/Picture'
-import { fadeUp, staggerContainer } from '@/app/lib/constants/motion'
+import Picture from '@/app/components/ui/media/Picture'
+import { fadeUp, staggerContainer } from '@/app/lib/constants/motion.constants'
 import { motion } from 'framer-motion'
 import { Book, Calculator, Users, ArrowRight } from 'lucide-react'
 import Link from 'next/link'

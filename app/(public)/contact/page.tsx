@@ -1,7 +1,7 @@
 'use client'
 
-import Picture from '@/app/components/common/Picture'
-import ContactForm from '@/app/components/forms/ContactForm'
+import Picture from '@/app/components/ui/media/Picture'
+import ContactForm from '@/app/components/features/contact/ContactForm'
 import { motion } from 'framer-motion'
 
 const contactInfo = [

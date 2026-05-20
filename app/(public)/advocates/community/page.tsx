@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Heart, Globe, Users, BookOpen, Cpu, Handshake } from 'lucide-react'
-import { fadeUp, staggerContainer } from '@/app/lib/constants/motion'
+import { fadeUp, staggerContainer } from '@/app/lib/constants/motion.constants'
 
 const partners = [
   {

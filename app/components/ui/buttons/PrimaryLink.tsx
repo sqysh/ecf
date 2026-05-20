@@ -1,4 +1,4 @@
-import { MotionLink } from '../../common/MotionLink'
+import { MotionLink } from '../media/MotionLink'
 
 export const PrimaryButtonStyles = `flex items-center justify-center gap-2 px-4 py-2.5 font-mono text-[11px] font-bold tracking-widest uppercase border border-primary-light dark:border-primary-dark bg-primary-light dark:bg-primary-dark text-accent-dark transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-light dark:focus-visible:outline-primary-dark min-h-10 block w-fit`
 

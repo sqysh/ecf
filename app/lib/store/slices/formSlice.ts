@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { initialContactSubmissionFormState } from '../../constants/initial-state/contact-submission'
-import { initialPaymentMethodFormState } from '../../constants/initial-state/payment-method'
-import { initialCreateAdminFormState } from '../../constants/initial-state/create-admin'
+import {
+  initialContactSubmissionFormState,
+  initialCreateAdminFormState,
+  initialPaymentMethodFormState
+} from '../../constants/initial-states.constants'
 
 // 1. Better type definitions
 export type Inputs = Record<string, string | number | boolean | any>

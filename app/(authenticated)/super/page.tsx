@@ -1,5 +1,5 @@
-import SuperDashboardClient from '@/app/components/pages/SuperDashboardClient'
 import prisma from '@/prisma/client'
+import SuperDashboardClient from './SuperDashboardClient'
 
 export default async function SuperDashboardPage() {
   const [orders, users, contactSubmissions, logs, paymentMethods] = await Promise.all([

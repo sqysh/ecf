@@ -1,4 +1,4 @@
-import { MotionLink } from '../../common/MotionLink'
+import { MotionLink } from '../media/MotionLink'
 
 // ─── Ghost link ─────────────────────────────────────────────────────────────
 export function GhostLink({

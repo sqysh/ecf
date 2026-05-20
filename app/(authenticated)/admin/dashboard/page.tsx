@@ -1,15 +1,13 @@
-import DashboardClient from '@/app/components/pages/DashboardClient'
-import { getContactSubmissions } from '@/app/lib/actions/getContactSubmissions'
+import { getContactSubmissions } from '@/app/lib/actions/contact-submission/getContactSubmissions'
 import { getDonations } from '@/app/lib/actions/getDonations'
-import { getSessionRole } from '@/app/lib/actions/getSessionRole'
 import { getUsers } from '@/app/lib/actions/getUsers'
+import DashboardClient from './DashboardClient'
 
 export default async function DashboardPage() {
-  const [contactSubmissions, donations, users, role] = await Promise.all([
+  const [contactSubmissions, donations, users] = await Promise.all([
     getContactSubmissions(),
     getDonations(),
-    getUsers(),
-    getSessionRole()
+    getUsers()
   ])
-  return <DashboardClient contactSubmissions={contactSubmissions} donations={donations} users={users} role={role} />
+  return <DashboardClient contactSubmissions={contactSubmissions} donations={donations} users={users} />
 }

@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, BookOpen, Users, Mic, Headphones, Puzzle, BookMarked } from 'lucide-react'
-import SectionHeading from '@/app/components/common/SectionHeading'
+import SectionHeading from '@/app/components/shared/SectionHeading'
 
 const programs = [
   {

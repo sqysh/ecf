@@ -1,4 +1,4 @@
-import MemberPortalClient from '@/app/components/pages/MemberPortalClient'
+import MemberPortalClient from '@/app/(authenticated)/member/portal/MemberPortalClient'
 import { getMemberPortal } from '@/app/lib/actions/getMemberPortal'
 import { getSavedPaymentMethods } from '@/app/lib/actions/getSavedPaymentMethods'
 import { getUserName } from '@/app/lib/actions/getUserName'

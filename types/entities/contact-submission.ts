@@ -1,3 +1,5 @@
+import { ContactReadStatus, ContactSubmissionType } from '@prisma/client'
+
 export interface IContactSubmission {
   id?: string
   firstName: string
@@ -9,3 +11,6 @@ export interface IContactSubmission {
 
   createdAt?: Date
 }
+
+export type StatusFilter = 'ALL' | ContactReadStatus
+export type TypeFilter = 'ALL' | ContactSubmissionType

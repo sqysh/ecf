@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, MapPin, ExternalLink, CheckCircle } from 'lucide-react'
-import { fadeUp, staggerContainer } from '@/app/lib/constants/motion'
+import { fadeUp, staggerContainer } from '@/app/lib/constants/motion.constants'
 
 const regions = [
   {

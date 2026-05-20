@@ -21,7 +21,7 @@ export async function proxy(request: TProxy) {
     return NextResponse.redirect(new URL(URL_REDIRECTS[pathname], request.url), { status: 301 })
   }
 
-  if (pathname === '/auth/login' && role) {
+  if (pathname === '/login' && role) {
     const redirect = request.cookies.get('ecf_redirect')?.value
 
     if (role === 'ADMIN' || role === 'SUPERUSER') return NextResponse.redirect(new URL('/admin/dashboard', request.url))
@@ -36,7 +36,7 @@ export async function proxy(request: TProxy) {
   if (!isProtected) return NextResponse.next()
 
   // Unauthenticated — send to login
-  if (!role) return NextResponse.redirect(new URL('/auth/login', request.url))
+  if (!role) return NextResponse.redirect(new URL('/login', request.url))
 
   // Admin routes
   if (pathname.startsWith('/admin/')) {
@@ -56,7 +56,7 @@ export const config = {
   matcher: [
     '/member/:path*',
     '/admin/:path*',
-    '/auth/login',
+    '/login',
 
     // Add old URL paths to the matcher so middleware checks them
     '/about-education-comes-first'

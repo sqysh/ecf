@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { setDonateCheckoutForm as setForm } from '../utils/setDonateCheckoutForm'
+import { setDonateCheckoutForm as setForm } from '../utils/donate.utils'
 
 type IInitilizeForm = {
   savedCards: any[]

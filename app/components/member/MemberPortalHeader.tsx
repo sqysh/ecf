@@ -31,7 +31,7 @@ export function MemberPortalHeader() {
           )}
 
           <button
-            onClick={() => signOut({ redirectTo: '/auth/login' })}
+            onClick={() => signOut({ redirectTo: '/login' })}
             aria-label="Sign out"
             className="flex items-center gap-1.5 px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest uppercase border border-border-subtle dark:border-border-dark text-text-light/50 dark:text-text-dark/40 hover:text-text-light dark:hover:text-text-dark transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-light dark:focus-visible:outline-primary-dark min-h-9"
           >

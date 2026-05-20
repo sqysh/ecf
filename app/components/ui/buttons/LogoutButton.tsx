@@ -12,7 +12,7 @@ const LogoutButton = () => {
 
     try {
       store.dispatch(setIsLoading())
-      await signOut({ redirectTo: '/auth/login' })
+      await signOut({ redirectTo: '/login' })
     } catch (error: unknown) {
       store.dispatch(
         showToast({

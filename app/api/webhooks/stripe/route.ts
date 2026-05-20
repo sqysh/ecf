@@ -4,7 +4,7 @@ import Stripe from 'stripe'
 import { createLog } from '@/app/lib/actions/createLog'
 import { stripe } from '@/app/lib/stripe'
 import { pusher } from '@/app/lib/pusher'
-import sendConfirmationEmail from '@/app/lib/utils/sendInitialConfirmationEmail'
+import sendConfirmationEmail from '@/app/lib/utils/email.utils'
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 

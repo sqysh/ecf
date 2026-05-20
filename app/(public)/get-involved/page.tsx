@@ -1,6 +1,6 @@
 'use client'
 
-import Picture from '@/app/components/common/Picture'
+import Picture from '@/app/components/ui/media/Picture'
 import { motion } from 'framer-motion'
 import { Heart, Users, Megaphone, BookOpen, Shield, Star, User, Zap } from 'lucide-react'
 import Link from 'next/link'

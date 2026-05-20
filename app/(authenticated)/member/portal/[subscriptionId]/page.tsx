@@ -1,4 +1,4 @@
-import MemberPortalSubscriptionDetailsClient from '@/app/components/pages/MemberPortalSubscriptionDetailsClient'
+import MemberPortalSubscriptionDetailsClient from '@/app/(authenticated)/member/portal/[subscriptionId]/MemberPortalSubscriptionDetailsClient'
 import { getSubscriptionDetails } from '@/app/lib/actions/getSubscriptionDetails'
 
 export default async function MemberPortalSubscriptionDetailsPage({
