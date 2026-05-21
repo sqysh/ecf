@@ -5,10 +5,10 @@ import { fmtCurreny } from '@/app/lib/utils/currency.utils'
 import { fullName, initials } from '@/app/lib/utils/user.utils'
 import { AnimatePresence, motion } from 'framer-motion'
 import { X, ExternalLink } from 'lucide-react'
-import { Section } from '../shared/Section'
-import { Field } from '../shared/Field'
 import { fmtDateTime, formatDate } from '@/app/lib/utils/date.utils'
-import OrderStatusBadge from '../shared/OrderStatusBadge'
+import { Section } from '../../layout/Section'
+import { Field } from '../../ui/forms/Field'
+import OrderStatusBadge from '../../domain/badges/OrderStatusBadge'
 
 export default function UserDetailDrawer({ user, onClose }: { user: UserWithStats | null; onClose: () => void }) {
   const open = !!user

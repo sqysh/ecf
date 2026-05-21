@@ -1,56 +1,53 @@
+'use client'
+
+import { donateOptions } from '@/app/lib/constants/donate.constants'
 import { FC } from 'react'
+import { RadioGroup, SelectableCard } from '../../ui/forms/RadioGroup'
+
 export const DonationTypeSelection: FC<{
   donationType: string
   setDonationType: (donationType: 'once' | 'monthly' | 'yearly') => void
   setSelectedPlan: (selectedPlan: string) => void
 }> = ({ donationType, setDonationType, setSelectedPlan }) => {
-  const options: {
-    type: 'once' | 'monthly' | 'yearly'
-    plan: string
-    label: string
-    sub: string
-  }[] = [
-    { type: 'once', plan: 'once_friend', label: 'One-Time', sub: 'Single donation' },
-    { type: 'monthly', plan: 'monthly_supporter', label: 'Monthly', sub: 'Recurring support' },
-    { type: 'yearly', plan: 'yearly-3000', label: 'Yearly', sub: 'Annual subscription' }
-  ]
+  const values = donateOptions.map((o) => o.type)
+
+  const handleChange = (newType: string) => {
+    const opt = donateOptions.find((o) => o.type === newType)
+    if (!opt) return
+    setSelectedPlan(opt.plan)
+    setDonationType(newType as 'once' | 'monthly' | 'yearly')
+  }
 
   return (
-    <div className="grid sm:grid-cols-3 gap-2 mb-8">
-      {options.map(({ type, plan, label, sub }) => {
+    <RadioGroup
+      label="Donation frequency"
+      values={values}
+      selectedValue={donationType}
+      onChange={handleChange}
+      orientation="horizontal"
+      className="grid sm:grid-cols-3 gap-2 mb-8"
+    >
+      {donateOptions.map(({ type, label, sub }) => {
         const active = donationType === type
         return (
-          <button
-            key={type}
-            type="button"
-            aria-pressed={active}
-            onClick={() => {
-              setSelectedPlan(plan)
-              setDonationType(type)
-            }}
-            className={`p-3 border text-center transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-light dark:focus-visible:outline-primary-dark ${
-              active
-                ? 'border-primary-light dark:border-primary-dark bg-primary-light/6 dark:bg-primary-dark/6'
-                : 'border-border-subtle dark:border-border-dark bg-transparent hover:border-text-light/20 dark:hover:border-text-dark/20'
-            }`}
-          >
+          <SelectableCard key={type} id={type} ariaLabel={`${label} — ${sub}`} className="p-3 text-center">
             <p
               className={`font-mono text-sm font-bold tracking-wide ${
-                active ? 'text-text-light dark:text-text-dark' : 'text-text-light/60 dark:text-text-dark/50'
+                active ? 'text-text-light dark:text-text-dark' : 'text-text-light/75 dark:text-text-dark/70'
               }`}
             >
               {label}
             </p>
             <p
               className={`font-mono text-[11px] mt-0.5 tracking-wide ${
-                active ? 'text-text-light/50 dark:text-text-dark/45' : 'text-text-light/35 dark:text-text-dark/30'
+                active ? 'text-text-light/80 dark:text-text-dark/75' : 'text-text-light/70 dark:text-text-dark/65'
               }`}
             >
               {sub}
             </p>
-          </button>
+          </SelectableCard>
         )
       })}
-    </div>
+    </RadioGroup>
   )
 }

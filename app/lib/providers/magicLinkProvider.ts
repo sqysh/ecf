@@ -17,6 +17,16 @@ const magicLinkProvider: EmailConfig = {
         subject: 'Sign in to Education Comes First',
         html: magicLinkTemplate(url)
       })
+
+      if (result.error) {
+        await createLog('error', 'Resend returned error', {
+          location: ['magicLinkProvider.ts'],
+          email,
+          error: result.error.message
+        })
+        throw new Error(result.error.message)
+      }
+
       await createLog('info', 'Magic link sent successfully', {
         location: ['magicLinkProvider.ts'],
         email,

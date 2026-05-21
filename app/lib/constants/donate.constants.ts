@@ -1,3 +1,5 @@
+import { Plan } from '@/app/components/features/donate/PlansGrid'
+
 export const ONE_TIME_PLANS = [
   {
     id: 'once_friend',
@@ -106,4 +108,30 @@ export const YEARLY_PLANS = [
   { id: 'yearly-600', name: 'Champion', description: 'Sustained commitment to student success', amount: 600 },
   { id: 'yearly-1200', name: 'Hero', description: 'Major investment in education', amount: 1200 },
   { id: 'yearly-custom', name: 'Custom Amount', amount: 0, description: 'Choose your own amount' }
+]
+
+export const impactItems = [
+  { amount: '$25', description: 'Provides school supplies for a student' },
+  { amount: '$75', description: 'Funds educational materials for a semester' },
+  { amount: '$150', description: 'Sponsors a tutoring workshop' },
+  { amount: '$300+', description: "Transforms a student's future" }
+]
+
+export const donateCheckoutStepLabels = ['Sign In', 'User Info', 'Donate']
+
+export const planMap: Record<'once' | 'monthly' | 'yearly', { plans: Plan[]; customId: string }> = {
+  once: { plans: ONE_TIME_PLANS, customId: 'once-custom' },
+  monthly: { plans: MONTHLY_PLANS, customId: 'monthly-custom' },
+  yearly: { plans: YEARLY_PLANS, customId: 'yearly-custom' }
+}
+
+export const donateOptions: {
+  type: 'once' | 'monthly' | 'yearly'
+  plan: string
+  label: string
+  sub: string
+}[] = [
+  { type: 'once', plan: 'once_friend', label: 'One-Time', sub: 'Single donation' },
+  { type: 'monthly', plan: 'monthly_supporter', label: 'Monthly', sub: 'Recurring support' },
+  { type: 'yearly', plan: 'yearly-3000', label: 'Yearly', sub: 'Annual subscription' }
 ]

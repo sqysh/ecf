@@ -1,6 +1,6 @@
 import prisma from '@/prisma/client'
 import type { User } from 'next-auth'
-// import { createStripeCustomer } from '../actions/createStripeCustomer'
+import { createStripeCustomer } from '../actions/createStripeCustomer'
 
 export async function handleEmailCallback(user: User) {
   let dbUser = await prisma.user.findUnique({
@@ -37,9 +37,9 @@ export async function handleEmailCallback(user: User) {
   }
 
   // Create Stripe customer if new user
-  // if (!dbUser.stripeCustomerId) {
-  //   await createStripeCustomer(dbUser.id, dbUser.email, `${dbUser.firstName || ''} ${dbUser.lastName || ''}`.trim())
-  // }
+  if (!dbUser.stripeCustomerId) {
+    await createStripeCustomer(dbUser.id, dbUser.email, `${dbUser.firstName || ''} ${dbUser.lastName || ''}`.trim())
+  }
 
   return true
 }

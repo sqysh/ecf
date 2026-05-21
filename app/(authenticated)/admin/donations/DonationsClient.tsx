@@ -19,7 +19,7 @@ import {
 import { StatCard } from '@/app/components/shared/StatCard'
 import { fmtCurreny } from '@/app/lib/utils/currency.utils'
 import { formatDate } from '@/app/lib/utils/date.utils'
-import DonationDetailDrawer from '@/app/components/admin/DonationDetatailsDrawer'
+import DonationDetailDrawer from '@/app/components/features/admin/DonationDetatailsDrawer'
 
 type SortField = 'createdAt' | 'totalAmount' | 'customerName'
 type SortDir = 'asc' | 'desc'

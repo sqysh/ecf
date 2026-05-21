@@ -1,5 +1,5 @@
 import { OrderStatus } from '@prisma/client'
-import Badge from '../ui/Badge'
+import Badge from '../../ui/feedback/Badge'
 
 const map: Record<OrderStatus, 'success' | 'warning' | 'danger' | 'neutral' | 'info'> = {
   CONFIRMED: 'success',

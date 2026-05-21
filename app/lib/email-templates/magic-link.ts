@@ -1,116 +1,133 @@
-const magicLinkTemplate = (url: string) => `
+export const magicLinkTemplate = (url: string) => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
   <title>Sign in to Education Comes First</title>
   <style>
-    @media only screen and (max-width: 480px) {
-      .header-title {
-        font-size: 28px !important;
-      }
-      .main-text {
-        font-size: 15px !important;
-      }
-      .button {
-        padding: 14px 28px !important;
-        font-size: 15px !important;
-      }
-      .link-text {
-        font-size: 11px !important;
-      }
+    @media (prefers-color-scheme: dark) {
+      .bg-page { background-color: #1a1a1a !important; }
+      .bg-card { background-color: #131411 !important; }
+      .border-c { border-color: #262525 !important; }
+      .text-primary { color: #ffffff !important; }
+      .text-secondary { color: rgba(255,255,255,0.6) !important; }
+      .text-muted { color: rgba(255,255,255,0.4) !important; }
+      .text-faint { color: rgba(255,255,255,0.25) !important; }
+      .text-accent { color: #c9f31f !important; }
+      .bg-traffic { background-color: rgba(255,255,255,0.02) !important; }
+      .border-traffic { border-color: #262525 !important; }
+      .url-text { color: #11d1ff !important; }
     }
   </style>
 </head>
-<body style="margin: 0; padding: 0; background: #ffffff; font-family: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-  <div style="max-width: 560px; margin: 0 auto; padding: 60px 20px;">
-    
-    <!-- Logo/Header -->
-    <div style="margin-bottom: 56px;">
-      <h1 class="header-title" style="margin: 0 0 4px 0; color: #000000; font-size: 32px; font-weight: 700; letter-spacing: -0.5px; font-family: 'Kanit', sans-serif;">
-        Education Comes First
-      </h1>
-      <div style="width: 48px; height: 3px; background: linear-gradient(90deg, #fddd58 0%, #0082f3 100%); border-radius: 2px;"></div>
-    </div>
+<body class="bg-page" style="margin: 0; padding: 0; background-color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="bg-page" style="background-color: #ffffff;">
+    <tr>
+      <td style="padding: 48px 16px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 480px; margin: 0 auto;">
 
-    <!-- Main Heading -->
-    <h2 style="margin: 0 0 16px 0; color: #000000; font-size: 28px; font-weight: 700; font-family: 'Kanit', sans-serif; line-height: 1.3;">
-      Your secure sign-in link
-    </h2>
+          <!-- Brand strip -->
+          <tr>
+            <td style="padding: 0 0 32px 0; text-align: center;">
+              <p class="text-accent" style="margin: 0 0 8px 0; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.25em; color: #131411; font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;">
+                Education Comes First
+              </p>
+              <h1 class="text-primary" style="margin: 0; font-size: 24px; font-weight: 800; letter-spacing: 0.02em; color: #000000;">
+                Sign in to your account
+              </h1>
+            </td>
+          </tr>
 
-    <!-- Main Message -->
-    <p class="main-text" style="margin: 0 0 40px 0; color: #666666; font-size: 17px; line-height: 1.6;">
-      Click the button below to sign in to your account. This link expires in 15 minutes.
-    </p>
+          <!-- Card -->
+          <tr>
+            <td class="bg-card border-c" style="background-color: #ffffff; border: 1px solid #f0e6db;">
 
-    <!-- Sign In Button -->
-    <div style="margin-bottom: 40px;">
-      <a href="${url}" class="button" style="display: inline-block; background: linear-gradient(135deg, #fddd58 0%, #0082f3 100%); color: #000000; text-decoration: none; padding: 16px 40px; border-radius: 50px; font-weight: 600; font-size: 16px; font-family: 'Lato', sans-serif; transition: transform 0.2s;">
-        Sign in to your account
-      </a>
-    </div>
+              <!-- Content -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="padding: 36px 28px 28px 28px;">
 
-    <!-- Divider -->
-    <div style="margin: 48px 0 32px 0;">
-      <div style="height: 1px; background: #e5e5e5;"></div>
-    </div>
+                    <!-- Eyebrow -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 20px;">
+                      <tr>
+                        <td style="vertical-align: middle;">
+                          <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                              <td style="width: 16px; height: 1px; background-color: #131411; font-size: 0; line-height: 0;" class="border-c">&nbsp;</td>
+                              <td style="width: 10px;">&nbsp;</td>
+                              <td class="text-primary" style="font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.25em; color: #000000; white-space: nowrap;">
+                                Magic link
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
 
-    <!-- Copy Link Section -->
-    <div style="margin-bottom: 48px;">
-      <p style="margin: 0 0 12px 0; color: #999999; font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">
-        Or copy this link
-      </p>
-      <p class="link-text" style="margin: 0; word-break: break-all; font-family: 'SF Mono', Monaco, 'Courier New', monospace; font-size: 12px; color: #0082f3; line-height: 1.8; padding: 12px 16px; background: #f8fafc; border-radius: 8px;">
-        ${url}
-      </p>
-    </div>
+                    <!-- Heading -->
+                    <h2 class="text-primary" style="margin: 0 0 12px 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; color: #000000; line-height: 1.2;">
+                      Your sign-in link is ready
+                    </h2>
 
-    <!-- Security Notice -->
-    <div style="margin-bottom: 56px; padding-left: 16px; border-left: 3px solid #fddd58;">
-      <p style="margin: 0; color: #666666; font-size: 15px; line-height: 1.6;">
-        <strong style="color: #000000;">Didn't request this?</strong><br>
-        You can safely ignore this email. Your account is secure.
-      </p>
-    </div>
+                    <!-- Description -->
+                    <p class="text-secondary" style="margin: 0 0 28px 0; font-size: 14px; color: rgba(0,0,0,0.6); line-height: 1.6;">
+                      Click the button below to securely sign in. This link expires in <span class="text-primary" style="color: #000000; font-weight: 600;">15 minutes</span> and can only be used once.
+                    </p>
 
-    <!-- Divider -->
-    <div style="margin: 56px 0 32px 0;">
-      <div style="height: 1px; background: #e5e5e5;"></div>
-    </div>
+                    <!-- CTA -->
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 32px;">
+                      <tr>
+                        <td style="background-color: #000000;">
+                          <a href="${url}" target="_blank" style="display: inline-block; padding: 14px 28px; color: #ffffff; font-size: 13px; font-weight: 600; text-decoration: none; letter-spacing: 0.01em;">
+                            Sign in →
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
 
-    <!-- Footer -->
-    <div style="margin-bottom: 24px;">
-      <p style="margin: 0 0 12px 0; color: #999999; font-size: 14px; line-height: 1.6;">
-        Questions? We're here to help.
-      </p>
-      <p style="margin: 0 0 8px 0;">
-        <a href="mailto:info@educationcomesfirst.org" style="color: #0082f3; text-decoration: none; font-size: 14px; font-weight: 500;">
-          info@educationcomesfirst.org
-        </a>
-      </p>
-      <p style="margin: 0;">
-        <a href="https://www.educationcomesfirst.org" style="color: #0082f3; text-decoration: none; font-size: 14px; font-weight: 500;">
-          www.educationcomesfirst.org
-        </a>
-      </p>
-    </div>
+                    <!-- Divider -->
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 20px;">
+                      <tr>
+                        <td class="border-c" style="height: 1px; background-color: #f0e6db; font-size: 0; line-height: 0;">&nbsp;</td>
+                      </tr>
+                    </table>
 
-    <!-- Legal Links -->
-    <div style="margin-top: 32px;">
-      <p style="margin: 0; font-size: 12px; color: #bbbbbb; line-height: 1.5;">
-        <a href="https://www.educationcomesfirst.org/privacy" style="color: #bbbbbb; text-decoration: none; margin-right: 16px;">Privacy Policy</a>
-        <a href="https://www.educationcomesfirst.org/terms" style="color: #bbbbbb; text-decoration: none;">Terms of Service</a>
-      </p>
-    </div>
+                    <!-- Fallback URL -->
+                    <p class="text-muted" style="margin: 0 0 8px 0; font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(0,0,0,0.4);">
+                      Button not working?
+                    </p>
+                    <p style="margin: 0 0 20px 0; word-break: break-all;">
+                      <a href="${url}" class="url-text" style="font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 11px; color: #00a2d1; text-decoration: none; line-height: 1.6;">${url}</a>
+                    </p>
 
-    <!-- Bottom Tagline -->
-    <div style="margin-top: 48px;">
-      <p style="margin: 0; color: #cccccc; font-size: 13px; line-height: 1.5;">
-        Education Comes First · Lynn, Massachusetts
-      </p>
-    </div>
-  </div>
+                    <!-- Security note -->
+                    <p class="text-muted" style="margin: 0; font-size: 12px; color: rgba(0,0,0,0.5); line-height: 1.6;">
+                      <span class="text-secondary" style="color: rgba(0,0,0,0.7); font-weight: 500;">Didn't request this?</span> You can safely ignore this email — your account won't be affected.
+                    </p>
+
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 24px 0 0 0; text-align: center;">
+              <p class="text-faint" style="margin: 0; font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(0,0,0,0.3);">
+                © 2026 Education Comes First
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
 `

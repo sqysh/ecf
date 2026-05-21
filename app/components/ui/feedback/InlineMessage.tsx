@@ -1,5 +1,7 @@
-import { type AuthErrorInfo } from '@/app/lib/utils/error.utils'
-import { motion } from 'framer-motion'
+'use client'
+
+import { AuthErrorInfo } from '@/app/lib/utils/error.utils'
+import { motion, useReducedMotion } from 'framer-motion'
 
 export function InlineMessage({
   type,
@@ -15,19 +17,21 @@ export function InlineMessage({
   icon?: AuthErrorInfo['icon']
 }) {
   const isError = type === 'error'
+  const reduceMotion = useReducedMotion()
+
   return (
     <motion.div
       id={id}
       role={isError ? 'alert' : 'status'}
       aria-live={isError ? 'assertive' : 'polite'}
-      initial={{ opacity: 0, y: -6 }}
+      initial={reduceMotion ? false : { opacity: 0, y: -6 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -4 }}
+      exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
       transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
       className={`flex items-start gap-2.5 px-4 py-3 text-[11px] font-mono tracking-wide border ${
         isError
-          ? 'border-red-400/30 bg-red-400/6 text-red-400'
-          : 'border-primary-light/30 dark:border-primary-dark/30 bg-primary-light/6 dark:bg-primary-dark/6 text-primary-light dark:text-primary-dark'
+          ? 'border-red-600/70 bg-red-50 text-red-700 dark:border-red-400/50 dark:bg-red-400/10 dark:text-red-400'
+          : 'border-secondary-light/70 bg-secondary-light/10 text-secondary-light-strong dark:border-primary-dark/50 dark:bg-primary-dark/10 dark:text-primary-dark'
       }`}
     >
       {Icon && (
@@ -37,7 +41,7 @@ export function InlineMessage({
       )}
       <span>
         {title && <span className="block font-bold mb-0.5">{title}</span>}
-        <span className={title ? 'opacity-80' : ''}>{message}</span>
+        <span>{message}</span>
       </span>
     </motion.div>
   )

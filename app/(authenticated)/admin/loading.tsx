@@ -1,4 +1,4 @@
-import AdminPageSkeleton from '@/app/components/admin/AdminPageSkeleton'
+import AdminPageSkeleton from '@/app/components/features/admin/AdminPageSkeleton'
 
 export default function Loading() {
   return <AdminPageSkeleton />

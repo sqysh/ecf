@@ -6,14 +6,16 @@ import { calculateStripeFees } from '@/app/lib/utils/stripe.utils'
 import { useDefaultCard } from '@/app/lib/hooks/useDefaultCard'
 import { getDonateCheckoutAmount, setDonateCheckoutForm as setForm } from '@/app/lib/utils/donate.utils'
 import { useInitializeForm } from '@/app/lib/hooks/useInitializeForm'
+import { ArrowRight } from 'lucide-react'
 import { Step3DonationAmountSection } from './Step3DonationAmountSection'
 import { CheckoutStep3UserInfo } from './CheckoutStep3UserInfo'
+import { FormFieldset } from '../../ui/forms/FormFieldset'
 import { SavedCardSelector } from './SavedCardSelector'
 import { CardElementField } from './CardElementField'
-import { SaveCardToggle } from '../../ui/forms/SaveCardToggle'
-import { CoverFeesToggle } from '../../ui/forms/CoverFeesToggle'
-import { FormError } from '../../ui/forms/FormError'
-import { SubmitButton } from '../../ui/forms/SubmitButton'
+import { SaveCardToggle } from './SaveCardToggle'
+import { CoverFeesToggle } from './CoverFeesToggle'
+import { FormError } from './FormError'
+import { PrimaryButton } from '../../ui/buttons/PrimaryButton'
 
 export type TDonateCheckoutForm = {
   savedCards: IPaymentMethod[]
@@ -21,8 +23,7 @@ export type TDonateCheckoutForm = {
   setStep: (step: number) => void
 }
 
-export function DonateCheckoutForm({ savedCards, inputs, setStep }: TDonateCheckoutForm) {
-  // ── Store ─────────────────────────────────────────────────────────────────
+export function CheckoutStep3({ savedCards, inputs, setStep }: TDonateCheckoutForm) {
   const session = useSession()
   const isAuthed = session.status === 'authenticated'
 
@@ -39,14 +40,24 @@ export function DonateCheckoutForm({ savedCards, inputs, setStep }: TDonateCheck
     inputs?.firstName || inputs?.lastName ? { firstName: inputs.firstName, lastName: inputs.lastName } : null
 
   const isValid = (usingSavedCard ? true : inputs?.cardComplete) && !!derivedName
+  const loading = !!inputs?.loading
+  const ready = isValid && !loading
 
   const setDefaultCard = useCallback((value: string) => setForm({ selectedCardId: value }), [])
 
   useDefaultCard(savedCards, setDefaultCard)
-  useInitializeForm({ savedCards, ...{ selectedPlan: 'once_friend', amount: 25, donationType: 'once' } })
+  useInitializeForm({
+    savedCards,
+    ...{ selectedPlan: 'once_friend', amount: 25, donationType: 'once' }
+  })
 
-  // ── Submit ─────────────────────────────────────────────────────────────────
-  const { handleSubmit } = useDonationSubmit({ inputs, finalAmount, feesCovered, usingSavedCard, fullName })
+  const { handleSubmit } = useDonationSubmit({
+    inputs,
+    finalAmount,
+    feesCovered,
+    usingSavedCard,
+    fullName
+  })
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-y-8">
@@ -57,10 +68,7 @@ export function DonateCheckoutForm({ savedCards, inputs, setStep }: TDonateCheck
       <CheckoutStep3UserInfo name={fullName} setStep={setStep} />
 
       {/* ── Payment ── */}
-      <fieldset className="border-0 p-0 m-0">
-        <legend className="text-xs font-semibold uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-6">
-          Payment Method
-        </legend>
+      <FormFieldset legend="Payment Method">
         <div className="space-y-6">
           {isAuthed && (
             <SavedCardSelector
@@ -70,7 +78,11 @@ export function DonateCheckoutForm({ savedCards, inputs, setStep }: TDonateCheck
               onSelectCard={(id) => setForm({ selectedCardId: id })}
               onUseNewCard={() => setForm({ useNewCard: true, selectedCardId: null })}
               onUseSavedCard={() =>
-                setForm({ useNewCard: false, selectedCardId: savedCards[0]?.stripePaymentId ?? null, saveCard: false })
+                setForm({
+                  useNewCard: false,
+                  selectedCardId: savedCards[0]?.stripePaymentId ?? null,
+                  saveCard: false
+                })
               }
             />
           )}
@@ -82,20 +94,32 @@ export function DonateCheckoutForm({ savedCards, inputs, setStep }: TDonateCheck
           <SaveCardToggle formName="donateCheckoutForm" />
           <CoverFeesToggle formName="donateCheckoutForm" processingFee={processingFee} />
         </div>
-      </fieldset>
+      </FormFieldset>
 
       {/* ── Error ── */}
       <FormError formName="donateCheckoutForm" />
 
-      <SubmitButton formName="donateCheckoutForm" isValid={isValid} label={`Donate $${finalAmountDisplay}`} />
+      <PrimaryButton
+        type="submit"
+        loading={loading}
+        disabled={!ready}
+        loadingLabel="Processing..."
+        trailingIcon={ArrowRight}
+        aria-label={`Donate $${finalAmountDisplay}`}
+      >
+        Donate ${finalAmountDisplay}
+      </PrimaryButton>
 
-      <p className="text-xs dark:text-zinc-500 text-neutral-600 text-center">
+      <p className="font-mono text-[11px] tracking-wide text-text-light/70 dark:text-text-dark/65 text-center">
         Secured by Stripe, Powered by{' '}
-        <span>
-          <a className="sqysh-gradient hover:underline" href="https://sqysh.io?lead_source=ecf">
-            Sqysh
-          </a>
-        </span>
+        <a
+          className="sqysh-gradient font-bold underline underline-offset-2 hover:no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary-light dark:focus-visible:outline-secondary-dark"
+          href="https://sqysh.io?lead_source=ecf"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Sqysh
+        </a>
       </p>
     </form>
   )

@@ -10,9 +10,9 @@ import { showToast } from '@/app/lib/store/slices/toastSlice'
 import { getSetupIntentClientSecret } from '@/app/lib/actions/getSetupIntentClientSecret'
 import { createPaymentMethod } from '@/app/lib/actions/createPaymentMethod'
 import { extractErrorMessage } from '@/app/lib/utils/error.utils'
-import { Backdrop } from '../ui/overlays/Backdrop'
-import Drawer from '../ui/overlays/Drawer'
-import PaymentMethodForm from '../features/donate/PaymentMethodForm'
+import { Backdrop } from '../../ui/overlays/Backdrop'
+import Drawer from '../../ui/overlays/Drawer'
+import PaymentMethodForm from '../donate/PaymentMethodForm'
 
 const PaymentMethodDrawer = () => {
   const router = useRouter()

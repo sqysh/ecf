@@ -4,11 +4,11 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { X, Reply, Archive, MailOpen, ExternalLink } from 'lucide-react'
 import { ContactSubmission, ContactReadStatus } from '@prisma/client'
 import { fullName, initials } from '@/app/lib/utils/user.utils'
-import Badge from '../../ui/Badge'
+import Badge from '../../ui/feedback/Badge'
 import { statusVariant } from '@/app/lib/utils/contact.utils'
 import { fmtDateTime } from '@/app/lib/utils/date.utils'
-import { Section } from '../../shared/Section'
-import { Field } from '../../shared/Field'
+import { Section } from '../../layout/Section'
+import { Field } from '../../ui/forms/Field'
 
 export default function MessageDetailDrawer({
   submission,

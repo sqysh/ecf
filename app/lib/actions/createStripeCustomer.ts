@@ -4,7 +4,9 @@ import prisma from '@/prisma/client'
 import { createLog } from './createLog'
 import { stripe } from '../stripe'
 
-export async function createStripeCustomer(userId: string, email: string, name: string) {
+type Result = { success: true; customerId: string } | { success: false; error: string }
+
+export async function createStripeCustomer(userId: string, email: string, name: string): Promise<Result> {
   try {
     const existingUser = await prisma.user.findUnique({
       where: { id: userId },
@@ -20,13 +22,18 @@ export async function createStripeCustomer(userId: string, email: string, name: 
     }
 
     // Create new Stripe customer
-    const customer = await stripe.customers.create({
-      email,
-      name,
-      metadata: {
-        userId
+    const customer = await stripe.customers.create(
+      {
+        email,
+        name,
+        metadata: {
+          userId
+        }
+      },
+      {
+        idempotencyKey: `customer-create-${userId}`
       }
-    })
+    )
 
     // Save to database
     await prisma.user.update({

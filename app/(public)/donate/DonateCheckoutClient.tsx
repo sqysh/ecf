@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import Picture from '@/app/components/ui/media/Picture'
 import { MotionLink } from '@/app/components/ui/media/MotionLink'
 import LogoHorizontalDark from '@/public/svg/LogoHorizontalDark'
@@ -10,20 +10,13 @@ import { createFormActions, setInputs } from '@/app/lib/store/slices/formSlice'
 import { useEffect, useState } from 'react'
 import { updateUserName } from '@/app/lib/actions/updateUserName'
 import { CheckoutStepIndicator } from '../../components/features/donate/CheckoutStepIndicator'
-import { CheckoutStep2 } from '../../components/features/donate/CheckoutStep2'
-import { CheckoutStep1 } from '../../components/features/donate/CheckoutStep1'
-import { DonateCheckoutForm } from '../../components/features/donate/DonationForm'
-
-const impactItems = [
-  { amount: '$25', description: 'Provides school supplies for a student' },
-  { amount: '$75', description: 'Funds educational materials for a semester' },
-  { amount: '$150', description: 'Sponsors a tutoring workshop' },
-  { amount: '$300+', description: "Transforms a student's future" }
-]
-
-const donateCheckoutStepLabels = ['Sign In', 'User Info', 'Donate']
+import { donateCheckoutStepLabels, impactItems } from '@/app/lib/constants/donate.constants'
+import { CheckoutStep1 } from '@/app/components/features/donate/CheckoutStep1'
+import { CheckoutStep2 } from '@/app/components/features/donate/CheckoutStep2'
+import { CheckoutStep3 } from '@/app/components/features/donate/CheckoutStep3'
 
 export default function DonateCheckoutClient({ savedCards, name }: any) {
+  const reduceMotion = useReducedMotion()
   // ── Store ───────────────────────────────────────────────────────────────────
   const session = useSession()
   const isAuthed = session.status === 'authenticated'
@@ -94,20 +87,20 @@ export default function DonateCheckoutClient({ savedCards, name }: any) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 xs:gap-12 items-start">
           {/* ── Left — Impact stats ─────────────────────────────────────────── */}
           <motion.aside
-            initial={{ opacity: 0, x: -16 }}
+            initial={reduceMotion ? false : { opacity: 0, x: -16 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
             className="lg:col-span-1"
             aria-label="Donation impact"
           >
-            <p className="font-mono text-[10px] tracking-[0.18em] uppercase text-text-light/35 dark:text-text-dark/30 mb-4">
+            <p className="font-mono text-[10px] tracking-[0.18em] uppercase font-bold text-text-light/65 dark:text-text-dark/65 mb-4">
               Your impact
             </p>
-            <div className="border border-border-subtle dark:border-border-dark divide-y divide-border-subtle dark:divide-border-dark">
+            <div className="border border-neutral-200 dark:border-border-dark divide-y divide-neutral-200 dark:divide-border-dark">
               {impactItems.map(({ amount, description }) => (
                 <div key={amount} className="px-4 py-3.5">
-                  <p className="font-mono text-xl font-bold text-primary-light dark:text-primary-dark">{amount}</p>
-                  <p className="font-mono text-[11px] text-text-light/45 dark:text-text-dark/40 mt-0.5 tracking-wide leading-relaxed">
+                  <p className="font-mono text-xl font-bold text-secondary-light dark:text-primary-dark">{amount}</p>
+                  <p className="font-mono text-[11px] text-text-light/75 dark:text-text-dark/70 mt-0.5 tracking-wide leading-relaxed">
                     {description}
                   </p>
                 </div>
@@ -116,10 +109,10 @@ export default function DonateCheckoutClient({ savedCards, name }: any) {
 
             {/* Trust badge */}
             <motion.p
-              initial={{ opacity: 0 }}
+              initial={reduceMotion ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="font-mono text-[10px] tracking-widest uppercase text-text-light/25 dark:text-text-dark/20 text-center mt-6"
+              className="font-mono text-[10px] tracking-widest uppercase font-bold text-text-light/65 dark:text-text-dark/60 text-center mt-6"
             >
               501(c)(3) Nonprofit Organization
             </motion.p>
@@ -168,7 +161,7 @@ export default function DonateCheckoutClient({ savedCards, name }: any) {
                     Make Your Donation
                   </h2>
 
-                  <DonateCheckoutForm savedCards={savedCards} inputs={inputs} setStep={setStep} />
+                  <CheckoutStep3 savedCards={savedCards} inputs={inputs} setStep={setStep} />
                 </div>
               </motion.div>
             )}

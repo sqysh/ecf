@@ -11,7 +11,7 @@ export interface IOrder {
 
   // Payment
   totalAmount: number
-  paymentMethod: string | null
+  paymentMethod: string
   paymentIntentId: string | null
   paidAt: Date | null
 

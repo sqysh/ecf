@@ -1,4 +1,4 @@
-import { Sidebar } from '@/app/components/admin/Sidebar'
+import { Sidebar } from '@/app/components/features/admin/Sidebar'
 import { getContactSubmissions } from '@/app/lib/actions/contact-submission/getContactSubmissions'
 import { auth } from '@/app/lib/auth'
 import { ReactNode } from 'react'

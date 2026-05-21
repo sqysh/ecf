@@ -13,7 +13,6 @@ import Header from './components/layout/Header'
 import Footer from './components/layout/Footer'
 import VideoLightbox from './components/ui/overlays/VideoLightbox'
 import ContactDrawer from './components/features/contact/ContactDrawer'
-import DebugEnv from './components/DebugEnv'
 
 const stripe = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
@@ -25,7 +24,6 @@ export default function RootLayoutWrapper({ children }: { children: ReactNode })
   return (
     <Provider store={store}>
       <Elements stripe={stripe}>
-        <DebugEnv />
         <VideoLightbox />
         <ContactDrawer />
         <ContactSubmissionSuccessModal />

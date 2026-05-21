@@ -73,7 +73,7 @@ function TimelineCard({ milestone }: { milestone: (typeof milestones)[0] }) {
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function OurHistory() {
   return (
-    <div className="min-h-screen bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark">
+    <div className="min-h-screen w-full bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark">
       {/* ── Hero ───────────────────────────────────────────────────────────── */}
       <section className={`${sectionPad} border-b border-border-subtle dark:border-border-dark`}>
         <div className={innerWidth}>

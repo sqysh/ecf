@@ -1,4 +1,4 @@
-import Badge from '../ui/Badge'
+import Badge from '../ui/feedback/Badge'
 
 export default function OrderTypeBadge({
   type,
