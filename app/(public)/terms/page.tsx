@@ -1,10 +1,12 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
-import { FileText, Home, ArrowLeft, Calendar, Scale } from 'lucide-react'
+import { FileText, Home, ArrowLeft, Calendar, Scale, Mail, MapPin, ArrowRight } from 'lucide-react'
+import { PrimaryButton } from '@/app/components/ui/buttons/PrimaryButton'
 
 export default function TermsConditionsPage() {
+  const reduceMotion = useReducedMotion()
   const lastUpdated = 'February 9, 2026'
 
   const sections = [
@@ -104,98 +106,122 @@ export default function TermsConditionsPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-bg-light dark:bg-bg-dark">
-      {/* Hero Section */}
-      <section className="relative py-16 sm:py-20 lg:py-24 border-b border-border-light dark:border-border-dark">
+    <div className="min-h-screen bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark">
+      {/* ── Hero ──────────────────────────────────────────────────────── */}
+      <section
+        className="relative py-16 sm:py-20 lg:py-24 border-b border-neutral-200 dark:border-border-dark"
+        aria-labelledby="terms-heading"
+      >
         <div className="max-w-container mx-auto px-4 sm:px-6 lg:px-12">
           {/* Breadcrumb */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
+          <motion.nav
+            initial={reduceMotion ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="flex items-center gap-2 text-sm mb-6"
+            aria-label="Breadcrumb"
+            className="flex items-center gap-2 font-mono text-[11px] tracking-wide mb-6"
           >
             <Link
               href="/"
-              className="font-lato text-text-light/60 dark:text-text-dark/60 hover:text-text-light dark:hover:text-text-dark transition-colors flex items-center gap-1"
+              className="flex items-center gap-1.5 text-text-light/85 dark:text-text-dark/80 underline underline-offset-2 hover:no-underline transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary-light dark:focus-visible:outline-secondary-dark"
             >
-              <Home className="w-4 h-4" />
+              <Home size={12} aria-hidden="true" />
               Home
             </Link>
-            <span className="text-text-light/40 dark:text-text-dark/40">/</span>
-            <span className="font-caveat text-lg text-secondary-light dark:text-secondary-dark">
-              Terms & Conditions
+            <span aria-hidden="true" className="text-text-light/55 dark:text-text-dark/50">
+              /
             </span>
-          </motion.div>
+            <span aria-current="page" className="font-bold text-secondary-light dark:text-secondary-dark">
+              Terms &amp; Conditions
+            </span>
+          </motion.nav>
 
           <div className="max-w-4xl">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="flex items-center gap-3 mb-4"
             >
-              <div className="w-12 h-12 rounded-xl bg-primary-light/10 dark:bg-primary-dark/10 flex items-center justify-center">
-                <Scale className="w-6 h-6 text-primary-light dark:text-primary-dark" />
+              <p className="font-mono text-[10px] tracking-[0.2em] uppercase font-bold text-secondary-light dark:text-secondary-dark mb-3">
+                {'// terms & conditions'}
+              </p>
+
+              <div className="flex items-center gap-3 mb-4">
+                <div
+                  aria-hidden="true"
+                  className="w-11 h-11 border border-secondary-light/60 dark:border-primary-dark/60 bg-secondary-light/10 dark:bg-primary-dark/10 flex items-center justify-center shrink-0"
+                >
+                  <Scale className="w-5 h-5 text-secondary-light dark:text-primary-dark" aria-hidden="true" />
+                </div>
+                <h1 id="terms-heading" className="font-mono text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
+                  Terms &amp; Conditions
+                </h1>
               </div>
-              <h1 className="font-kanit text-4xl sm:text-5xl md:text-6xl font-bold text-text-light dark:text-text-dark">
-                Terms & Conditions
-              </h1>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="flex items-center gap-2 text-text-light/60 dark:text-text-dark/60"
+              className="flex items-center gap-2 font-mono text-xs text-text-light/85 dark:text-text-dark/80"
             >
-              <Calendar className="w-4 h-4" />
-              <span className="font-lato text-sm">Last updated: {lastUpdated}</span>
+              <Calendar size={13} aria-hidden="true" />
+              <span>
+                Last updated: <span className="font-bold text-text-light dark:text-text-dark">{lastUpdated}</span>
+              </span>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Main Content */}
+      {/* ── Main content ─────────────────────────────────────────────── */}
       <section className="py-16 sm:py-20 lg:py-24">
         <div className="max-w-container mx-auto px-4 sm:px-6 lg:px-12">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
-            {/* Sidebar - Table of Contents */}
+            {/* ── Sidebar — TOC ─────────────────────────────────────── */}
             <motion.aside
-              initial={{ opacity: 0, x: -20 }}
+              initial={reduceMotion ? false : { opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="lg:col-span-4"
+              aria-label="Table of contents"
             >
               <div className="lg:sticky lg:top-24">
-                <div className="bg-accent dark:bg-accent-dark border border-border-light dark:border-border-dark rounded-2xl p-6">
+                <div className="bg-white/50 dark:bg-accent-dark/40 border border-neutral-200 dark:border-border-dark p-6">
                   <div className="flex items-center gap-2 mb-4">
-                    <FileText className="w-5 h-5 text-primary-light dark:text-primary-dark" />
-                    <h2 className="font-kanit text-lg font-bold text-text-light dark:text-text-dark">
+                    <FileText className="w-4 h-4 text-secondary-light dark:text-primary-dark" aria-hidden="true" />
+                    <h2 className="font-mono text-[10px] tracking-[0.2em] uppercase font-bold text-text-light dark:text-text-dark">
                       Table of Contents
                     </h2>
                   </div>
-                  <nav className="space-y-2">
-                    {sections.map((section, index) => (
-                      <a
-                        key={section.id}
-                        href={`#${section.id}`}
-                        className="block font-lato text-sm text-text-light/70 dark:text-text-dark/70 hover:text-primary-light dark:hover:text-primary-dark transition-colors py-1.5 px-3 rounded-lg hover:bg-bg-light dark:hover:bg-bg-dark"
-                      >
-                        <span className="text-xs text-text-light/40 dark:text-text-dark/40 mr-2">
-                          {String(index + 1).padStart(2, '0')}
-                        </span>
-                        {section.title}
-                      </a>
-                    ))}
+
+                  <nav aria-label="Terms sections">
+                    <ul className="space-y-0.5">
+                      {sections.map((section, index) => (
+                        <li key={section.id}>
+                          <a
+                            href={`#${section.id}`}
+                            className="flex items-center gap-2 font-mono text-xs text-text-light/85 dark:text-text-dark/80 hover:text-secondary-light dark:hover:text-secondary-dark hover:bg-bg-light dark:hover:bg-bg-dark transition-colors py-2 px-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary-light dark:focus-visible:outline-secondary-dark"
+                          >
+                            <span
+                              aria-hidden="true"
+                              className="text-[10px] font-bold text-text-light/65 dark:text-text-dark/65 shrink-0"
+                            >
+                              {String(index + 1).padStart(2, '0')}
+                            </span>
+                            <span>{section.title}</span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
                   </nav>
 
-                  <div className="mt-6 pt-6 border-t border-border-light dark:border-border-dark">
+                  <div className="mt-6 pt-6 border-t border-neutral-200 dark:border-border-dark">
                     <Link
                       href="/"
-                      className="inline-flex items-center gap-2 font-lato text-sm text-secondary-light dark:text-secondary-dark hover:underline"
+                      className="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-secondary-light dark:text-secondary-dark underline underline-offset-2 hover:no-underline transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary-light dark:focus-visible:outline-secondary-dark"
                     >
-                      <ArrowLeft className="w-4 h-4" />
+                      <ArrowLeft size={12} aria-hidden="true" />
                       Back to Home
                     </Link>
                   </div>
@@ -203,95 +229,115 @@ export default function TermsConditionsPage() {
               </div>
             </motion.aside>
 
-            {/* Content */}
+            {/* ── Content ───────────────────────────────────────────── */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
               className="lg:col-span-8"
             >
-              <div className="prose prose-lg max-w-none">
-                {/* Introduction */}
-                <div className="mb-12 p-6 bg-accent dark:bg-accent-dark border-l-4 border-primary-light dark:border-primary-dark rounded-r-xl">
-                  <p className="font-lato text-base text-text-light/80 dark:text-text-dark/80 leading-relaxed m-0">
-                    Please read these Terms and Conditions carefully before using the Education Comes First website and
-                    services. These terms govern your access to and use of our services, and by accessing or using our
-                    services, you agree to be bound by these terms.
-                  </p>
-                </div>
+              {/* Intro banner */}
+              <div className="mb-12 p-6 bg-white/50 dark:bg-accent-dark/40 border-l-2 border-secondary-light dark:border-primary-dark">
+                <p className="font-mono text-sm text-text-light/85 dark:text-text-dark/80 leading-relaxed">
+                  Please read these Terms and Conditions carefully before using the Education Comes First website and
+                  services. These terms govern your access to and use of our services, and by accessing or using our
+                  services, you agree to be bound by these terms.
+                </p>
+              </div>
 
-                {/* Sections */}
-                <div className="space-y-12">
-                  {sections.map((section, index) => (
-                    <div key={section.id} id={section.id} className="scroll-mt-24">
-                      <div className="flex items-start gap-4 mb-4">
-                        <span className="shrink-0 w-8 h-8 rounded-lg bg-primary-light/10 dark:bg-primary-dark/10 flex items-center justify-center font-kanit text-sm font-bold text-primary-light dark:text-primary-dark">
-                          {String(index + 1).padStart(2, '0')}
-                        </span>
-                        <h2 className="font-kanit text-2xl sm:text-3xl font-bold text-text-light dark:text-text-dark">
-                          {section.title}
-                        </h2>
-                      </div>
+              {/* Sections */}
+              <div className="space-y-12">
+                {sections.map((section, index) => (
+                  <article
+                    key={section.id}
+                    id={section.id}
+                    className="scroll-mt-24"
+                    aria-labelledby={`${section.id}-heading`}
+                  >
+                    <div className="flex items-start gap-4 mb-4">
+                      <span
+                        aria-hidden="true"
+                        className="shrink-0 w-9 h-9 border border-secondary-light/60 dark:border-primary-dark/60 bg-secondary-light/10 dark:bg-primary-dark/10 flex items-center justify-center font-mono text-xs font-bold text-secondary-light dark:text-primary-dark"
+                      >
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                      <h2
+                        id={`${section.id}-heading`}
+                        className="font-mono text-xl sm:text-2xl font-bold text-text-light dark:text-text-dark leading-tight pt-1"
+                      >
+                        {section.title}
+                      </h2>
+                    </div>
 
-                      <div className="pl-12">
-                        <p className="font-lato text-base sm:text-lg leading-relaxed text-text-light/80 dark:text-text-dark/80 mb-4">
-                          {section.content}
-                        </p>
+                    <div className="pl-13">
+                      <p className="font-mono text-sm sm:text-base leading-relaxed text-text-light/85 dark:text-text-dark/80 mb-4">
+                        {section.content}
+                      </p>
 
-                        {section.list && (
-                          <ul className="space-y-3 mb-6">
-                            {section.list.map((item, i) => (
-                              <li key={i} className="flex items-start gap-3">
-                                <div className="w-1.5 h-1.5 rounded-full bg-primary-light dark:bg-primary-dark mt-2.5 shrink-0" />
-                                <span className="font-lato text-base text-text-light/70 dark:text-text-dark/70">
-                                  {item}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
+                      {section.list && (
+                        <ul className="space-y-2.5 mb-6">
+                          {section.list.map((item, i) => (
+                            <li key={i} className="flex items-start gap-3">
+                              <span
+                                aria-hidden="true"
+                                className="w-1 h-1 bg-secondary-light dark:bg-primary-dark mt-2.5 shrink-0"
+                              />
+                              <span className="font-mono text-sm sm:text-base text-text-light/85 dark:text-text-dark/80 leading-relaxed">
+                                {item}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
 
-                        {section.contactInfo && (
-                          <div className="mt-4 p-4 bg-accent dark:bg-accent-dark rounded-xl border border-border-light dark:border-border-dark">
-                            <p className="font-lato text-base text-text-light/80 dark:text-text-dark/80 mb-2">
-                              <strong className="text-text-light dark:text-text-dark">
-                                {section.contactInfo.organization}
-                              </strong>
-                            </p>
-                            <p className="font-lato text-base text-text-light/70 dark:text-text-dark/70">
-                              Email:{' '}
+                      {section.contactInfo && (
+                        <div className="mt-4 p-5 bg-white/50 dark:bg-accent-dark/40 border border-neutral-200 dark:border-border-dark">
+                          <p className="font-mono text-sm font-bold text-text-light dark:text-text-dark mb-3">
+                            {section.contactInfo.organization}
+                          </p>
+                          <div className="space-y-2">
+                            <p className="font-mono text-sm text-text-light/85 dark:text-text-dark/80 flex items-center gap-2">
+                              <Mail size={13} aria-hidden="true" className="shrink-0" />
+                              <span>Email:</span>
                               <a
                                 href={`mailto:${section.contactInfo.email}`}
-                                className="text-secondary-light dark:text-secondary-dark hover:underline"
+                                className="font-bold text-secondary-light dark:text-secondary-dark underline underline-offset-2 hover:no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary-light dark:focus-visible:outline-secondary-dark"
                               >
                                 {section.contactInfo.email}
                               </a>
                             </p>
-                            <p className="font-lato text-base text-text-light/70 dark:text-text-dark/70">
-                              {section.contactInfo.address}
+                            <p className="font-mono text-sm text-text-light/85 dark:text-text-dark/80 flex items-center gap-2">
+                              <MapPin size={13} aria-hidden="true" className="shrink-0" />
+                              <span>{section.contactInfo.address}</span>
                             </p>
                           </div>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </div>
-                  ))}
-                </div>
+                  </article>
+                ))}
+              </div>
 
-                {/* Footer CTA */}
-                <div className="mt-16 pt-8 border-t border-border-light dark:border-border-dark">
-                  <div className="bg-linear-to-br from-primary-light/10 to-secondary-light/10 dark:from-primary-dark/10 dark:to-secondary-dark/10 rounded-2xl p-8 text-center">
-                    <h3 className="font-kanit text-2xl font-bold text-text-light dark:text-text-dark mb-3">
-                      Questions About Our Terms?
-                    </h3>
-                    <p className="font-lato text-base text-text-light/70 dark:text-text-dark/70 mb-6 max-w-2xl mx-auto">
-                      If you have any questions or concerns about these Terms and Conditions, please don&apos;t hesitate
-                      to reach out to us.
-                    </p>
-                    <Link
-                      href="/contact"
-                      className="inline-flex items-center gap-2 bg-linear-to-r from-primary-light to-secondary-light dark:from-primary-dark dark:to-secondary-dark text-text-light dark:text-text-dark font-lato font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all"
-                    >
-                      Contact Us
+              {/* Footer CTA */}
+              <div className="mt-16 pt-8 border-t border-neutral-200 dark:border-border-dark">
+                <div className="border border-neutral-200 dark:border-border-dark bg-white/50 dark:bg-accent-dark/40 p-8 text-center">
+                  <h3 className="font-mono text-xl font-bold text-text-light dark:text-text-dark mb-3">
+                    Questions about our terms?
+                  </h3>
+                  <p className="font-mono text-sm text-text-light/85 dark:text-text-dark/80 mb-6 max-w-2xl mx-auto leading-relaxed">
+                    If you have any questions or concerns about these Terms and Conditions, please don&apos;t hesitate
+                    to reach out to us.
+                  </p>
+                  <div className="max-w-xs mx-auto">
+                    <Link href="/contact" className="block">
+                      <PrimaryButton
+                        type="button"
+                        loading={false}
+                        trailingIcon={ArrowRight}
+                        aria-label="Contact us about terms and conditions"
+                      >
+                        Contact Us
+                      </PrimaryButton>
                     </Link>
                   </div>
                 </div>

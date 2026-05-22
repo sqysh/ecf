@@ -1,19 +1,33 @@
 'use client'
 
 import { useReducedMotion } from 'framer-motion'
+import { useUiSelector } from '@/app/lib/store/store'
 
 /**
  * Inline animated text element designed to live *inside* a parent heading.
  * Inherits font-size from its parent so it scales together with surrounding
  * text. Stops the fill animation when user prefers reduced motion.
+ * Switches between primary-light (yellow) and primary-dark (lime) based on
+ * the app's theme state.
  */
 export default function AnimatedTextFill() {
   const reduceMotion = useReducedMotion()
+  const { isDark } = useUiSelector()
+
+  // Pass the active fill color through an inline CSS variable so the same
+  // stylesheet can be used for both modes without media queries fighting
+  // the Redux-driven theme.
+  const fillColor = isDark ? 'var(--color-primary-dark)' : 'var(--color-primary-light)'
 
   return (
     <>
       <style>{baseStyles}</style>
-      <span className={reduceMotion ? 'fill-static' : 'fill-animate'}>Education</span>
+      <span
+        className={reduceMotion ? 'fill-static' : 'fill-animate'}
+        style={{ '--fill': fillColor } as React.CSSProperties}
+      >
+        Education
+      </span>
     </>
   )
 }
@@ -44,7 +58,7 @@ const baseStyles = `
   }
 
   .fill-animate {
-    background: linear-gradient(90deg, var(--color-primary-light) 0%, var(--color-primary-light) 100%);
+    background: linear-gradient(90deg, var(--fill) 0%, var(--fill) 100%);
     background-size: 0% 100%;
     background-position: left center;
     background-repeat: no-repeat;
@@ -55,15 +69,9 @@ const baseStyles = `
 
   /* Static fallback for reduced-motion users: fully filled, no animation. */
   .fill-static {
-    background: var(--color-primary-light);
+    background: var(--fill);
     background-clip: text;
     -webkit-background-clip: text;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .fill-animate, .fill-static {
-      -webkit-text-stroke: clamp(1px, 0.15vw, 2px) rgba(255, 255, 255, 0.6);
-    }
   }
 
   /* Fallback for browsers that ignore prefers-reduced-motion via JS but

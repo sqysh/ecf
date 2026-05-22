@@ -1,8 +1,21 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
-import { Shield, Home, ArrowLeft, Calendar, Lock, Eye, Database, UserCheck, Mail, Phone, MapPin } from 'lucide-react'
+import {
+  Shield,
+  Home,
+  ArrowLeft,
+  Calendar,
+  Lock,
+  Eye,
+  Database,
+  UserCheck,
+  Mail,
+  MapPin,
+  ArrowRight
+} from 'lucide-react'
+import { PrimaryButton } from '@/app/components/ui/buttons/PrimaryButton'
 
 const sections = [
   {
@@ -154,117 +167,143 @@ const sections = [
     content: `If you have questions or comments about this Privacy Policy, please contact us at:`,
     contactInfo: {
       organization: 'Education Comes First',
-      email: 'privacy@educationcomesfirst.org',
-      address: 'Lynn, Massachusetts',
-      phone: '(555) 123-4567'
+      email: 'info@educationcomesfirst.org',
+      address: 'Lynn, Massachusetts'
     }
   }
 ]
 
 export default function PrivacyPolicyPage() {
+  const reduceMotion = useReducedMotion()
   const lastUpdated = 'February 9, 2026'
 
   return (
-    <div className="min-h-screen bg-bg-light dark:bg-bg-dark">
-      {/* Hero Section */}
-      <section className="relative py-16 sm:py-20 lg:py-24 border-b border-border-light dark:border-border-dark">
+    <div className="min-h-screen bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark">
+      {/* ── Hero ──────────────────────────────────────────────────────── */}
+      <section
+        className="relative py-16 sm:py-20 lg:py-24 border-b border-neutral-200 dark:border-border-dark"
+        aria-labelledby="privacy-heading"
+      >
         <div className="max-w-container mx-auto px-4 sm:px-6 lg:px-12">
           {/* Breadcrumb */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
+          <motion.nav
+            initial={reduceMotion ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="flex items-center gap-2 text-sm mb-6"
+            aria-label="Breadcrumb"
+            className="flex items-center gap-2 font-mono text-[11px] tracking-wide mb-6"
           >
             <Link
               href="/"
-              className="font-lato text-text-light/60 dark:text-text-dark/60 hover:text-text-light dark:hover:text-text-dark transition-colors flex items-center gap-1"
+              className="flex items-center gap-1.5 text-text-light/85 dark:text-text-dark/80 underline underline-offset-2 hover:no-underline transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary-light dark:focus-visible:outline-secondary-dark"
             >
-              <Home className="w-4 h-4" />
+              <Home size={12} aria-hidden="true" />
               Home
             </Link>
-            <span className="text-text-light/40 dark:text-text-dark/40">/</span>
-            <span className="font-caveat text-lg text-secondary-light dark:text-secondary-dark">Privacy Policy</span>
-          </motion.div>
+            <span aria-hidden="true" className="text-text-light/55 dark:text-text-dark/50">
+              /
+            </span>
+            <span aria-current="page" className="font-bold text-secondary-light dark:text-secondary-dark">
+              Privacy Policy
+            </span>
+          </motion.nav>
 
           <div className="max-w-4xl">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="flex items-center gap-3 mb-4"
             >
-              <div className="w-12 h-12 rounded-xl bg-primary-light/10 dark:bg-primary-dark/10 flex items-center justify-center">
-                <Shield className="w-6 h-6 text-primary-light dark:text-primary-dark" />
+              <p className="font-mono text-[10px] tracking-[0.2em] uppercase font-bold text-secondary-light dark:text-secondary-dark mb-3">
+                {'// privacy policy'}
+              </p>
+
+              <div className="flex items-center gap-3 mb-4">
+                <div
+                  aria-hidden="true"
+                  className="w-11 h-11 border border-secondary-light/60 dark:border-primary-dark/60 bg-secondary-light/10 dark:bg-primary-dark/10 flex items-center justify-center shrink-0"
+                >
+                  <Shield className="w-5 h-5 text-secondary-light dark:text-primary-dark" aria-hidden="true" />
+                </div>
+                <h1 id="privacy-heading" className="font-mono text-3xl sm:text-4xl md:text-5xl font-bold leading-tight">
+                  Privacy Policy
+                </h1>
               </div>
-              <h1 className="font-kanit text-4xl sm:text-5xl md:text-6xl font-bold text-text-light dark:text-text-dark">
-                Privacy Policy
-              </h1>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="flex items-center gap-2 text-text-light/60 dark:text-text-dark/60"
+              className="flex items-center gap-2 font-mono text-xs text-text-light/85 dark:text-text-dark/80"
             >
-              <Calendar className="w-4 h-4" />
-              <span className="font-lato text-sm">Last updated: {lastUpdated}</span>
+              <Calendar size={13} aria-hidden="true" />
+              <span>
+                Last updated: <span className="font-bold text-text-light dark:text-text-dark">{lastUpdated}</span>
+              </span>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Main Content */}
+      {/* ── Main content ─────────────────────────────────────────────── */}
       <section className="py-16 sm:py-20 lg:py-24">
         <div className="max-w-container mx-auto px-4 sm:px-6 lg:px-12">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
-            {/* Sidebar - Table of Contents */}
+            {/* ── Sidebar — TOC ─────────────────────────────────────── */}
             <motion.aside
-              initial={{ opacity: 0, x: -20 }}
+              initial={reduceMotion ? false : { opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="lg:col-span-4"
+              aria-label="Table of contents"
             >
               <div className="lg:sticky lg:top-24">
-                <div className="bg-accent dark:bg-accent-dark border border-border-light dark:border-border-dark rounded-2xl p-6">
+                <div className="bg-white/50 dark:bg-accent-dark/40 border border-neutral-200 dark:border-border-dark p-6">
                   <div className="flex items-center gap-2 mb-4">
-                    <Lock className="w-5 h-5 text-primary-light dark:text-primary-dark" />
-                    <h2 className="font-kanit text-lg font-bold text-text-light dark:text-text-dark">
+                    <Lock className="w-4 h-4 text-secondary-light dark:text-primary-dark" aria-hidden="true" />
+                    <h2 className="font-mono text-[10px] tracking-[0.2em] uppercase font-bold text-text-light dark:text-text-dark">
                       Quick Navigation
                     </h2>
                   </div>
-                  <nav className="space-y-1">
-                    {sections.map((section) => (
-                      <a
-                        href={`#${section.id}`}
-                        key={section.id}
-                        className="group flex items-center gap-3 font-lato text-sm text-text-light/70 dark:text-text-dark/70 hover:text-primary-light dark:hover:text-primary-dark transition-colors py-2 px-3 rounded-lg hover:bg-bg-light dark:hover:bg-bg-dark"
-                      >
-                        <span className="flex-1">{section.title}</span>
-                      </a>
-                    ))}
+
+                  <nav aria-label="Privacy policy sections">
+                    <ul className="space-y-0.5">
+                      {sections.map((section) => (
+                        <li key={section.id}>
+                          <a
+                            href={`#${section.id}`}
+                            className="block font-mono text-xs text-text-light/85 dark:text-text-dark/80 hover:text-secondary-light dark:hover:text-secondary-dark hover:bg-bg-light dark:hover:bg-bg-dark transition-colors py-2 px-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary-light dark:focus-visible:outline-secondary-dark"
+                          >
+                            {section.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
                   </nav>
 
-                  <div className="mt-6 pt-6 border-t border-border-light dark:border-border-dark">
+                  <div className="mt-6 pt-6 border-t border-neutral-200 dark:border-border-dark">
                     <Link
                       href="/"
-                      className="inline-flex items-center gap-2 font-lato text-sm text-secondary-light dark:text-secondary-dark hover:underline"
+                      className="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-secondary-light dark:text-secondary-dark underline underline-offset-2 hover:no-underline transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary-light dark:focus-visible:outline-secondary-dark"
                     >
-                      <ArrowLeft className="w-4 h-4" />
+                      <ArrowLeft size={12} aria-hidden="true" />
                       Back to Home
                     </Link>
                   </div>
 
-                  {/* Privacy Badge */}
-                  <div className="mt-6 p-4 bg-primary-light/5 dark:bg-primary-dark/5 rounded-xl border border-primary-light/20 dark:border-primary-dark/20">
+                  {/* Privacy badge */}
+                  <div className="mt-6 p-4 border border-secondary-light/40 dark:border-primary-dark/40 bg-secondary-light/10 dark:bg-primary-dark/10">
                     <div className="flex items-start gap-3">
-                      <Shield className="w-5 h-5 text-primary-light dark:text-primary-dark shrink-0 mt-0.5" />
+                      <Shield
+                        className="w-4 h-4 text-secondary-light dark:text-primary-dark shrink-0 mt-0.5"
+                        aria-hidden="true"
+                      />
                       <div>
-                        <p className="font-lato text-xs font-semibold text-text-light dark:text-text-dark mb-1">
+                        <p className="font-mono text-[10px] tracking-widest uppercase font-bold text-text-light dark:text-text-dark mb-1.5">
                           Your Privacy Matters
                         </p>
-                        <p className="font-lato text-xs text-text-light/60 dark:text-text-dark/60">
+                        <p className="font-mono text-[11px] text-text-light/85 dark:text-text-dark/80 leading-relaxed">
                           We are committed to protecting your personal information and being transparent about how we
                           use it.
                         </p>
@@ -275,147 +314,150 @@ export default function PrivacyPolicyPage() {
               </div>
             </motion.aside>
 
-            {/* Content */}
+            {/* ── Content ───────────────────────────────────────────── */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
               className="lg:col-span-8"
             >
-              <div className="prose prose-lg max-w-none">
-                {/* Introduction Banner */}
-                <div className="mb-12 p-6 bg-linear-to-br from-primary-light/10 to-secondary-light/10 dark:from-primary-dark/10 dark:to-secondary-dark/10 border border-primary-light/20 dark:border-primary-dark/20 rounded-2xl">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-primary-light dark:bg-primary-dark flex items-center justify-center shrink-0">
-                      <Shield className="w-6 h-6 text-text-light dark:text-text-dark" />
-                    </div>
-                    <div>
-                      <h3 className="font-kanit text-xl font-bold text-text-light dark:text-text-dark mb-2">
-                        Your Privacy is Our Priority
-                      </h3>
-                      <p className="font-lato text-base text-text-light/80 dark:text-text-dark/80 leading-relaxed m-0">
-                        At Education Comes First, we respect your privacy and are committed to protecting your personal
-                        information. This policy explains how we collect, use, and safeguard your data when you interact
-                        with our services.
-                      </p>
-                    </div>
+              {/* Intro banner */}
+              <div className="mb-12 p-6 border border-secondary-light/40 dark:border-primary-dark/40 bg-secondary-light/8 dark:bg-primary-dark/8">
+                <div className="flex items-start gap-4">
+                  <div
+                    aria-hidden="true"
+                    className="w-11 h-11 border border-secondary-light/60 dark:border-primary-dark/60 bg-secondary-light/10 dark:bg-primary-dark/10 flex items-center justify-center shrink-0"
+                  >
+                    <Shield className="w-5 h-5 text-secondary-light dark:text-primary-dark" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <h3 className="font-mono text-lg font-bold text-text-light dark:text-text-dark mb-2">
+                      Your privacy is our priority
+                    </h3>
+                    <p className="font-mono text-sm text-text-light/85 dark:text-text-dark/80 leading-relaxed">
+                      At Education Comes First, we respect your privacy and are committed to protecting your personal
+                      information. This policy explains how we collect, use, and safeguard your data when you interact
+                      with our services.
+                    </p>
                   </div>
                 </div>
+              </div>
 
-                {/* Sections */}
-                <div className="space-y-12">
-                  {sections.map((section) => (
-                    <div key={section.id} id={section.id} className="scroll-mt-24">
-                      <div className="flex items-start gap-4 mb-4">
-                        <div className="w-10 h-10 rounded-xl bg-primary-light/10 dark:bg-primary-dark/10 flex items-center justify-center shrink-0">
-                          {/* <section.icon className="w-5 h-5 text-primary-light dark:text-primary-dark" /> */}
-                        </div>
-                        <div className="flex-1">
-                          <h2 className="font-kanit text-2xl sm:text-3xl font-bold text-text-light dark:text-text-dark">
-                            {section.title}
-                          </h2>
-                        </div>
-                      </div>
+              {/* Sections */}
+              <div className="space-y-12">
+                {sections.map((section) => (
+                  <article
+                    key={section.id}
+                    id={section.id}
+                    className="scroll-mt-24"
+                    aria-labelledby={`${section.id}-heading`}
+                  >
+                    <h2
+                      id={`${section.id}-heading`}
+                      className="font-mono text-xl sm:text-2xl font-bold text-text-light dark:text-text-dark mb-4 leading-tight"
+                    >
+                      {section.title}
+                    </h2>
 
-                      <div className="pl-14">
-                        <p className="font-lato text-base sm:text-lg leading-relaxed text-text-light/80 dark:text-text-dark/80 mb-4">
-                          {section.content}
-                        </p>
-
-                        {section.list && (
-                          <ul className="space-y-3 mb-6">
-                            {section.list.map((item, i) => (
-                              <li key={i} className="flex items-start gap-3">
-                                <div className="w-1.5 h-1.5 rounded-full bg-primary-light dark:bg-primary-dark mt-2.5 shrink-0" />
-                                <span className="font-lato text-base text-text-light/70 dark:text-text-dark/70">
-                                  {item}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-
-                        {section.subsections && (
-                          <div className="space-y-6 mt-6">
-                            {section.subsections.map((subsection, i) => (
-                              <div
-                                key={i}
-                                className="pl-4 border-l-2 border-primary-light/20 dark:border-primary-dark/20"
-                              >
-                                <h4 className="font-kanit text-lg font-bold text-text-light dark:text-text-dark mb-2">
-                                  {subsection.title}
-                                </h4>
-                                <p className="font-lato text-base text-text-light/70 dark:text-text-dark/70">
-                                  {subsection.content}
-                                </p>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-
-                        {section.contactInfo && (
-                          <div className="mt-4 p-6 bg-accent dark:bg-accent-dark rounded-xl border border-border-light dark:border-border-dark">
-                            <p className="font-lato text-base text-text-light/80 dark:text-text-dark/80 mb-3">
-                              <strong className="text-text-light dark:text-text-dark">
-                                {section.contactInfo.organization}
-                              </strong>
-                            </p>
-                            <div className="space-y-2 text-text-light/70 dark:text-text-dark/70">
-                              <p className="font-lato text-base flex items-center gap-2">
-                                <Mail className="w-4 h-4" />
-                                Email:{' '}
-                                <a
-                                  href={`mailto:${section.contactInfo.email}`}
-                                  className="text-secondary-light dark:text-secondary-dark hover:underline"
-                                >
-                                  {section.contactInfo.email}
-                                </a>
-                              </p>
-                              {section.contactInfo.phone && (
-                                <p className="font-lato text-base flex items-center gap-2">
-                                  <Phone className="w-4 h-4" />
-                                  Phone: {section.contactInfo.phone}
-                                </p>
-                              )}
-                              <p className="font-lato text-base flex items-center gap-2">
-                                <MapPin className="w-4 h-4" />
-                                {section.contactInfo.address}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Footer CTA */}
-                <div className="mt-16 pt-8 border-t border-border-light dark:border-border-dark">
-                  <div className="bg-linear-to-br from-primary-light/10 to-secondary-light/10 dark:from-primary-dark/10 dark:to-secondary-dark/10 rounded-2xl p-8 text-center">
-                    <div className="w-16 h-16 rounded-2xl bg-primary-light dark:bg-primary-dark flex items-center justify-center mx-auto mb-4">
-                      <Shield className="w-8 h-8 text-text-light dark:text-text-dark" />
-                    </div>
-                    <h3 className="font-kanit text-2xl font-bold text-text-light dark:text-text-dark mb-3">
-                      Have Privacy Questions?
-                    </h3>
-                    <p className="font-lato text-base text-text-light/70 dark:text-text-dark/70 mb-6 max-w-2xl mx-auto">
-                      If you have any questions or concerns about how we handle your personal information, we&apos;re
-                      here to help.
+                    <p className="font-mono text-sm sm:text-base leading-relaxed text-text-light/85 dark:text-text-dark/80 mb-4">
+                      {section.content}
                     </p>
-                    <div className="flex flex-wrap items-center justify-center gap-4">
-                      <Link
-                        href="/contact"
-                        className="inline-flex items-center gap-2 bg-linear-to-r from-primary-light to-secondary-light dark:from-primary-dark dark:to-secondary-dark text-text-light dark:text-text-dark font-lato font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all"
+
+                    {section.list && (
+                      <ul className="space-y-2.5 mb-6">
+                        {section.list.map((item, i) => (
+                          <li key={i} className="flex items-start gap-3">
+                            <span
+                              aria-hidden="true"
+                              className="w-1 h-1 bg-secondary-light dark:bg-primary-dark mt-2.5 shrink-0"
+                            />
+                            <span className="font-mono text-sm sm:text-base text-text-light/85 dark:text-text-dark/80 leading-relaxed">
+                              {item}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {section.subsections && (
+                      <div className="space-y-6 mt-6">
+                        {section.subsections.map((subsection, i) => (
+                          <div
+                            key={i}
+                            className="pl-4 border-l-2 border-secondary-light/40 dark:border-primary-dark/40"
+                          >
+                            <h3 className="font-mono text-base font-bold text-text-light dark:text-text-dark mb-2">
+                              {subsection.title}
+                            </h3>
+                            <p className="font-mono text-sm text-text-light/85 dark:text-text-dark/80 leading-relaxed">
+                              {subsection.content}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {section.contactInfo && (
+                      <div className="mt-4 p-5 bg-white/50 dark:bg-accent-dark/40 border border-neutral-200 dark:border-border-dark">
+                        <p className="font-mono text-sm font-bold text-text-light dark:text-text-dark mb-3">
+                          {section.contactInfo.organization}
+                        </p>
+                        <div className="space-y-2">
+                          <p className="font-mono text-sm text-text-light/85 dark:text-text-dark/80 flex items-center gap-2">
+                            <Mail size={13} aria-hidden="true" className="shrink-0" />
+                            <span>Email:</span>
+                            <a
+                              href={`mailto:${section.contactInfo.email}`}
+                              className="font-bold text-secondary-light dark:text-secondary-dark underline underline-offset-2 hover:no-underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary-light dark:focus-visible:outline-secondary-dark"
+                            >
+                              {section.contactInfo.email}
+                            </a>
+                          </p>
+                          <p className="font-mono text-sm text-text-light/85 dark:text-text-dark/80 flex items-center gap-2">
+                            <MapPin size={13} aria-hidden="true" className="shrink-0" />
+                            <span>{section.contactInfo.address}</span>
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </article>
+                ))}
+              </div>
+
+              {/* Footer CTA */}
+              <div className="mt-16 pt-8 border-t border-neutral-200 dark:border-border-dark">
+                <div className="border border-neutral-200 dark:border-border-dark bg-white/50 dark:bg-accent-dark/40 p-8 text-center">
+                  <div
+                    aria-hidden="true"
+                    className="w-12 h-12 border border-secondary-light/60 dark:border-primary-dark/60 bg-secondary-light/10 dark:bg-primary-dark/10 flex items-center justify-center mx-auto mb-4"
+                  >
+                    <Shield className="w-6 h-6 text-secondary-light dark:text-primary-dark" aria-hidden="true" />
+                  </div>
+                  <h3 className="font-mono text-xl font-bold text-text-light dark:text-text-dark mb-3">
+                    Have privacy questions?
+                  </h3>
+                  <p className="font-mono text-sm text-text-light/85 dark:text-text-dark/80 mb-6 max-w-2xl mx-auto leading-relaxed">
+                    If you have any questions or concerns about how we handle your personal information, we&apos;re here
+                    to help.
+                  </p>
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 max-w-md mx-auto">
+                    <Link href="/contact" className="flex-1">
+                      <PrimaryButton
+                        type="button"
+                        loading={false}
+                        trailingIcon={ArrowRight}
+                        aria-label="Contact us about privacy questions"
                       >
                         Contact Us
-                      </Link>
-                      <Link
-                        href="/terms"
-                        className="inline-flex items-center gap-2 border-2 border-border-light dark:border-border-dark text-text-light dark:text-text-dark font-lato font-semibold px-8 py-4 rounded-full hover:bg-accent dark:hover:bg-accent-dark transition-all"
-                      >
-                        View Terms & Conditions
-                      </Link>
-                    </div>
+                      </PrimaryButton>
+                    </Link>
+
+                    <Link
+                      href="/terms"
+                      className="flex-1 flex items-center justify-center gap-2 px-5 py-3 font-mono text-[11px] font-bold tracking-widest uppercase border border-neutral-300 dark:border-border-dark text-text-light dark:text-text-dark hover:border-text-light/60 dark:hover:border-text-dark/60 transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary-light dark:focus-visible:outline-primary-dark min-h-11"
+                    >
+                      View Terms
+                    </Link>
                   </div>
                 </div>
               </div>

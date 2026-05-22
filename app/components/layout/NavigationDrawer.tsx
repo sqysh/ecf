@@ -161,22 +161,6 @@ export default function ContactDrawer() {
 
               <div aria-hidden="true" className="border-t border-neutral-200 dark:border-border-dark" />
 
-              {/* Address */}
-              <div>
-                <SectionHeading>Address</SectionHeading>
-                <div className="flex items-start gap-2">
-                  <MapPin
-                    className="w-3.5 h-3.5 text-secondary-light dark:text-primary-dark shrink-0 mt-0.5"
-                    aria-hidden="true"
-                  />
-                  <p className="font-mono text-xs text-text-light/85 dark:text-text-dark/80 leading-relaxed">
-                    123 Education Street
-                    <br />
-                    Your City, ST 12345
-                  </p>
-                </div>
-              </div>
-
               {/* Email */}
               <div>
                 <SectionHeading>Email</SectionHeading>
@@ -186,18 +170,6 @@ export default function ContactDrawer() {
                 >
                   <Mail className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   info@educationcomesfirst.org
-                </a>
-              </div>
-
-              {/* Phone */}
-              <div>
-                <SectionHeading>Call Now</SectionHeading>
-                <a
-                  href="tel:+11234567890"
-                  className="flex items-center gap-2 font-mono text-xs font-bold text-secondary-light dark:text-secondary-dark underline underline-offset-2 hover:no-underline transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary-light dark:focus-visible:outline-secondary-dark"
-                >
-                  <Phone className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-                  +1 (123) 456-7890
                 </a>
               </div>
 

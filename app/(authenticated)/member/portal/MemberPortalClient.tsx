@@ -149,7 +149,7 @@ export default function MemberPortalClient({ name, data, savedCards }: ISupporte
       <MemberPortalHeader />
 
       {/* ── Body ───────────────────────────────────────────────────────────── */}
-      <div className="max-w-container mx-auto px-4 xs:px-6">
+      <div className="max-w-7xl sm:h-[calc(100vh-119px)] min-h-245 mx-auto px-4 xs:px-6">
         {/* ── Hero strip ───────────────────────────────────────────────────── */}
         <motion.div
           custom={0}
