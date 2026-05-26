@@ -2,7 +2,6 @@ import { PaymentMethod } from '@stripe/stripe-js'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Pusher from 'pusher-js'
-import { savePaymentMethod } from '../actions/savePaymentMethod'
 import { useRef } from 'react'
 
 export function usePaymentProcessor() {
@@ -16,12 +15,10 @@ export function usePaymentProcessor() {
   }
 
   const setupPusherListenerOneTime = (
-    saveCard?: boolean,
-    paymentMethod?: string,
     processingStatus?: string,
-    setError?: any,
-    setProcessingStatus?: any,
-    setLoading?: any
+    setError?: (msg: string) => void,
+    setProcessingStatus?: (status: string) => void,
+    setLoading?: (loading: boolean) => void
   ) => {
     const channelId = session?.data?.user?.id
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY!, {
@@ -31,9 +28,9 @@ export function usePaymentProcessor() {
 
     const timeout = setTimeout(() => {
       if (processingStatus === 'processing') {
-        setError('Order processing timeout. Please check your email for confirmation.')
-        setProcessingStatus('failed')
-        setLoading(false)
+        setError?.('Order processing timeout. Please check your email for confirmation.')
+        setProcessingStatus?.('failed')
+        setLoading?.(false)
       }
     }, 10000)
 
@@ -42,23 +39,19 @@ export function usePaymentProcessor() {
       hasProcessedOrder.current = true
 
       clearTimeout(timeout)
-      setProcessingStatus('success')
-
-      if (saveCard && session?.data?.user?.id && paymentMethod) {
-        savePaymentMethod(session?.data?.user?.id, paymentMethod as string, true).catch(console.error)
-      }
+      setProcessingStatus?.('success')
 
       router.push(`/order-confirmation/${data.orderId}`)
-      setLoading(false)
+      setLoading?.(false)
       channel.unbind_all()
       pusher.unsubscribe(`payment-${channelId}`)
     })
 
     channel.bind('order-failed', (data: any) => {
       clearTimeout(timeout)
-      setProcessingStatus('failed')
-      setError(data.error || 'Order processing failed')
-      setLoading(false)
+      setProcessingStatus?.('failed')
+      setError?.(data.error || 'Order processing failed')
+      setLoading?.(false)
       channel.unbind('order-created')
       channel.unbind('order-failed')
     })

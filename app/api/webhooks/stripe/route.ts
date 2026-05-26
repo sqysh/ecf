@@ -5,6 +5,7 @@ import { createLog } from '@/app/lib/actions/createLog'
 import { stripe } from '@/app/lib/stripe'
 import { pusher } from '@/app/lib/pusher'
 import sendConfirmationEmail from '@/app/lib/utils/email.utils'
+import { savePaymentMethod } from '@/app/lib/actions/savePaymentMethod'
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
@@ -139,6 +140,28 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
       }
     })
 
+    // ── Save card if requested ─────────────────────────────────────────────
+    // Done here (server-side, in the webhook) rather than from the client so
+    // it doesn't depend on the user staying on the page after redirect.
+    if (metadata.saveCard === 'true' && userId && paymentIntent.payment_method) {
+      const saveResult = await savePaymentMethod(
+        userId,
+        paymentIntent.payment_method as string,
+        true // mark as default
+      )
+
+      if (!saveResult.success) {
+        await createLog('error', 'Order created but card save failed', {
+          orderId: order.id,
+          userId,
+          paymentIntentId: id,
+          error: saveResult.error
+        })
+        // Don't fail the whole webhook — the order succeeded, that's the
+        // important thing. The user can re-save the card from the portal.
+      }
+    }
+
     // Send confirmation email
     await sendConfirmationEmail(order, orderType, amount)
 
@@ -157,7 +180,8 @@ async function handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent)
       userId,
       type: orderType,
       paymentIntentId: id,
-      amount: amount / 100
+      amount: amount / 100,
+      cardSaved: metadata.saveCard === 'true'
     })
   } catch (error) {
     await createLog('error', 'Failed to create order from payment intent', {
@@ -394,18 +418,17 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
 async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
   try {
     const invoiceWithSub = invoice as any
-    // Subscription ID - basil uses parent.subscription_details
+    // Subscription ID — basil uses parent.subscription_details
     let subscriptionId: string | null = null
     if (invoiceWithSub.parent?.subscription_details?.subscription) {
       subscriptionId = invoiceWithSub.parent.subscription_details.subscription
     }
 
-    if (!subscriptionId) {
-      return
-    }
+    if (!subscriptionId) return
 
     const isFirstPayment = invoice.billing_reason === 'subscription_create'
 
+    // Pull the PaymentIntent ID for the renewal
     let paymentIntentId: string | null = null
     const invoicePayments = await stripe.invoicePayments.list({ invoice: invoice.id })
     const defaultPayment = invoicePayments.data.find((p) => p.is_default)
@@ -416,7 +439,7 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
           : (defaultPayment.payment.payment_intent as any)?.id || null
     }
 
-    // Check if order already exists
+    // Check if order already exists (handles webhook retries)
     const existingOrder = await prisma.order.findFirst({
       where: {
         stripeSubscriptionId: subscriptionId,
@@ -424,19 +447,16 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
       }
     })
 
-    if (existingOrder) {
-      return
-    }
+    if (existingOrder) return
 
     // Get the subscription details
     const subscriptionResponse = await stripe.subscriptions.retrieve(subscriptionId, {
       expand: ['default_payment_method']
     })
-
     const subscription = subscriptionResponse as Stripe.Subscription
 
     const userId = subscription.metadata?.userId
-
+    const validUserId = userId && userId !== 'guest' ? userId : null
     const frequency = subscription.metadata?.frequency || 'monthly'
     const amount = invoice.amount_paid / 100
     const coverFees = subscription.metadata?.coverFees === 'true'
@@ -449,9 +469,13 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
       if (frequency === 'yearly') {
         return new Date(anchor.setFullYear(anchor.getFullYear() + 1))
       }
-
       return new Date(anchor.setMonth(anchor.getMonth() + 1))
     }
+
+    const paymentMethodId =
+      typeof subscription.default_payment_method === 'string'
+        ? subscription.default_payment_method
+        : subscription.default_payment_method?.id || null
 
     const order = await prisma.order.create({
       data: {
@@ -461,21 +485,42 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
         paymentMethod: 'stripe',
         customerEmail: subscription.metadata?.email || invoice.customer_email || '',
         customerName: subscription.metadata?.name || '',
-        userId: userId && userId !== 'guest' ? userId : null,
+        userId: validUserId,
         stripeSubscriptionId: subscriptionId,
         paymentIntentId: paymentIntentId || null,
-        paymentMethodId:
-          typeof subscription.default_payment_method === 'string'
-            ? subscription.default_payment_method
-            : subscription.default_payment_method?.id || null,
+        paymentMethodId,
         isRecurring: true,
         recurringFrequency: frequency,
-        coverFees: coverFees,
-        feesCovered: feesCovered,
+        coverFees,
+        feesCovered,
         paidAt: invoice.status_transitions?.paid_at ? new Date(invoice.status_transitions.paid_at * 1000) : new Date(),
         nextBillingDate: getNextBillingDate(subscription)
       }
     })
+
+    // ── Save the subscription's card to the user's saved payment methods ──
+    // On the first payment of a new subscription, Stripe has already attached
+    // the PaymentMethod to the customer (that's how subscriptions work). We
+    // just need to mirror it into our DB so the member portal shows it.
+    // On renewals, we skip — the card is already in our DB from the first run.
+    if (isFirstPayment && validUserId && paymentMethodId) {
+      const saveResult = await savePaymentMethod(
+        validUserId,
+        paymentMethodId,
+        true // mark as default since it's an active subscription
+      )
+
+      if (!saveResult.success) {
+        await createLog('error', 'Subscription created but card mirror failed', {
+          orderId: order.id,
+          userId: validUserId,
+          subscriptionId,
+          paymentMethodId,
+          error: saveResult.error
+        })
+        // Don't fail the webhook — the subscription succeeded, that's what matters.
+      }
+    }
 
     await createLog('info', `Recurring donation ${isFirstPayment ? 'created' : 'renewed'}`, {
       orderId: order.id,
