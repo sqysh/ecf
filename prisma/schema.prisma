@@ -94,48 +94,44 @@ model Order {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Order details
   type   OrderType
   status OrderStatus @default(PENDING)
 
-  // Payment
-  totalAmount     Float // Total cost
-  paymentMethod   String? // "stripe", "paypal", "cash", etc.
-  paymentIntentId String? // Stripe payment intent ID
-  paidAt          DateTime? // When payment was completed
+  totalAmount     Float
+  paymentMethod   String?
+  paymentIntentId String?
+  paidAt          DateTime?
 
-  // Customer info (denormalized for easy access)
   customerEmail String
   customerName  String
   customerPhone String?
 
-  // Billing info
-  billingAddress Json? // Store as JSON
+  billingAddress Json?
   coverFees      Boolean @default(false)
-  feesCovered    Float   @default(0) // Amount in cents
+  feesCovered    Float   @default(0)
   notes          String?
 
-  // User info (nullable - guest checkout allowed)
   userId String?
   user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
 
-  // Payment method
-  paymentMethodId String? // stripe payment method ID used
+  paymentMethodId String?
 
   // Recurring donation fields
-  stripeSubscriptionId String?   @unique // For recurring donations
+  stripeSubscriptionId String? // no longer unique — one row per payment cycle
+  stripeInvoiceId      String?   @unique // dedup key: one row per paid invoice
   isRecurring          Boolean   @default(false)
-  recurringFrequency   String? // "monthly", "yearly"
-  nextBillingDate      DateTime? // Next charge date
+  recurringFrequency   String?
+  nextBillingDate      DateTime?
 
-  failureReason String? // Store the failure reason
-  failureCode   String? // Store the failure code (optional)
+  failureReason String?
+  failureCode   String?
 
   @@index([type])
   @@index([status])
   @@index([userId])
   @@index([customerEmail])
   @@index([createdAt])
+  @@index([stripeSubscriptionId])
 }
 
 model Log {

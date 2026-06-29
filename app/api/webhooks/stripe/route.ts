@@ -336,7 +336,6 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
       frequency: subscription.metadata?.frequency || 'monthly',
       amount: subscription.items.data[0]?.price.unit_amount || 0,
       customerEmail: subscription.metadata?.email,
-      campaignId: subscription.metadata?.campaignId,
       currentPeriodEnd: new Date((subscription as any).current_period_end * 1000),
       createdAt: new Date(subscription.created * 1000)
     })
@@ -350,15 +349,24 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
 
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   try {
-    const order = await prisma.order.update({
+    const result = await prisma.order.updateMany({
+      where: {
+        stripeSubscriptionId: subscription.id,
+        status: { in: ['PENDING', 'CONFIRMED'] }
+      },
+      data: { status: 'CANCELLED', nextBillingDate: null }
+    })
+
+    // Grab a row for the userId (for the Pusher notify)
+    const order = await prisma.order.findFirst({
       where: { stripeSubscriptionId: subscription.id },
-      data: { status: 'CANCELLED' }
+      orderBy: { createdAt: 'desc' }
     })
 
     await createLog('info', 'Recurring donation cancelled', {
       subscriptionId: subscription.id,
-      orderId: order.id,
-      userId: order.userId
+      rowsUpdated: result.count,
+      userId: order?.userId
     })
 
     if (order?.userId) {
@@ -376,27 +384,24 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   try {
-    const statusMap: Record<string, 'CONFIRMED' | 'PENDING' | 'CANCELLED' | 'FAILED'> = {
-      active: 'CONFIRMED',
-      past_due: 'PENDING',
-      canceled: 'CANCELLED',
-      unpaid: 'FAILED',
-      incomplete: 'PENDING'
-    }
+    const nextBillingDate = (subscription as any).current_period_end
+      ? new Date((subscription as any).current_period_end * 1000)
+      : null
 
-    const order = await prisma.order.update({
+    // Update forward-looking field only — don't rewrite historical payment statuses.
+    await prisma.order.updateMany({
       where: { stripeSubscriptionId: subscription.id },
-      data: {
-        status: statusMap[subscription.status] || 'PENDING',
-        nextBillingDate: (subscription as any).current_period_end
-          ? new Date((subscription as any).current_period_end * 1000)
-          : null
-      }
+      data: { nextBillingDate }
+    })
+
+    const order = await prisma.order.findFirst({
+      where: { stripeSubscriptionId: subscription.id },
+      orderBy: { createdAt: 'desc' }
     })
 
     await createLog('info', 'Subscription updated', {
       subscriptionId: subscription.id,
-      orderId: order.id,
+      orderId: order?.id,
       status: subscription.status
     })
 
@@ -404,7 +409,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       await pusher.trigger(`user-${order.userId}`, 'subscription-updated', {
         subscriptionId: subscription.id,
         status: subscription.status,
-        nextBillingDate: order.nextBillingDate
+        nextBillingDate
       })
     }
   } catch (error) {
@@ -418,17 +423,20 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
 async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
   try {
     const invoiceWithSub = invoice as any
-    // Subscription ID — basil uses parent.subscription_details
     let subscriptionId: string | null = null
     if (invoiceWithSub.parent?.subscription_details?.subscription) {
       subscriptionId = invoiceWithSub.parent.subscription_details.subscription
     }
-
     if (!subscriptionId) return
 
     const isFirstPayment = invoice.billing_reason === 'subscription_create'
 
-    // Pull the PaymentIntent ID for the renewal
+    // Idempotency: one row per invoice. Retries of the same invoice no-op.
+    const existingOrder = await prisma.order.findUnique({
+      where: { stripeInvoiceId: invoice.id }
+    })
+    if (existingOrder) return
+
     let paymentIntentId: string | null = null
     const invoicePayments = await stripe.invoicePayments.list({ invoice: invoice.id })
     const defaultPayment = invoicePayments.data.find((p) => p.is_default)
@@ -439,83 +447,23 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
           : (defaultPayment.payment.payment_intent as any)?.id || null
     }
 
-    // Get the subscription details (needed for both create and update paths)
-    const subscriptionResponse = await stripe.subscriptions.retrieve(subscriptionId, {
+    const subscription = (await stripe.subscriptions.retrieve(subscriptionId, {
       expand: ['default_payment_method']
-    })
-    const subscription = subscriptionResponse as Stripe.Subscription
+    })) as Stripe.Subscription
 
-    const userId = subscription.metadata?.userId
-    const validUserId = userId && userId !== 'guest' ? userId : null
+    const userId = subscription.metadata?.userId || null
     const frequency = subscription.metadata?.frequency || 'monthly'
     const amount = invoice.amount_paid / 100
     const coverFees = subscription.metadata?.coverFees === 'true'
     const feesCovered = parseFloat(subscription.metadata?.feesCovered || '0')
 
-    function getNextBillingDate(subscription: any): Date {
-      const frequency = subscription.metadata?.frequency || 'monthly'
-      const anchor = new Date(subscription.billing_cycle_anchor * 1000)
-
-      if (frequency === 'yearly') {
-        return new Date(anchor.setFullYear(anchor.getFullYear() + 1))
-      }
+    function getNextBillingDate(sub: any): Date {
+      const f = sub.metadata?.frequency || 'monthly'
+      const anchor = new Date(sub.billing_cycle_anchor * 1000)
+      if (f === 'yearly') return new Date(anchor.setFullYear(anchor.getFullYear() + 1))
       return new Date(anchor.setMonth(anchor.getMonth() + 1))
     }
 
-    const paymentMethodId =
-      typeof subscription.default_payment_method === 'string'
-        ? subscription.default_payment_method
-        : subscription.default_payment_method?.id || null
-
-    // ── Idempotency / renewal handling ──
-    // stripeSubscriptionId is @unique, so there is one order row per
-    // subscription. Find it by subscription id alone.
-    const existingOrder = await prisma.order.findFirst({
-      where: { stripeSubscriptionId: subscriptionId }
-    })
-
-    if (existingOrder) {
-      // First-payment retry → already created, nothing to do.
-      if (isFirstPayment) return
-
-      // Renewal → update the existing order in place.
-      const updatedOrder = await prisma.order.update({
-        where: { id: existingOrder.id },
-        data: {
-          status: 'CONFIRMED',
-          totalAmount: amount,
-          paymentIntentId: paymentIntentId || existingOrder.paymentIntentId,
-          paymentMethodId: paymentMethodId || existingOrder.paymentMethodId,
-          paidAt: invoice.status_transitions?.paid_at
-            ? new Date(invoice.status_transitions.paid_at * 1000)
-            : new Date(),
-          nextBillingDate: getNextBillingDate(subscription)
-        }
-      })
-
-      await createLog('info', 'Recurring donation renewed', {
-        orderId: updatedOrder.id,
-        subscriptionId,
-        amount,
-        isFirstPayment: false
-      })
-
-      const channelId = `payment-${subscriptionId}`
-      await pusher.trigger(channelId, 'order-created', {
-        orderId: updatedOrder.id,
-        amount: updatedOrder.totalAmount,
-        status: updatedOrder.status,
-        type: updatedOrder.type,
-        frequency,
-        coverFees,
-        feesCovered,
-        createdAt: updatedOrder.createdAt
-      })
-
-      return
-    }
-
-    // ── No existing order → first payment, create it ──
     const order = await prisma.order.create({
       data: {
         type: 'RECURRING_DONATION',
@@ -524,49 +472,44 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
         paymentMethod: 'stripe',
         customerEmail: subscription.metadata?.email || invoice.customer_email || '',
         customerName: subscription.metadata?.name || '',
-        userId: validUserId,
+        customerPhone: subscription.metadata?.phone || '',
+        userId,
         stripeSubscriptionId: subscriptionId,
+        stripeInvoiceId: invoice.id,
         paymentIntentId: paymentIntentId || null,
-        paymentMethodId,
+        paymentMethodId:
+          typeof subscription.default_payment_method === 'string'
+            ? subscription.default_payment_method
+            : subscription.default_payment_method?.id || null,
         isRecurring: true,
         recurringFrequency: frequency,
         coverFees,
         feesCovered,
         paidAt: invoice.status_transitions?.paid_at ? new Date(invoice.status_transitions.paid_at * 1000) : new Date(),
-        nextBillingDate: getNextBillingDate(subscription)
+        nextBillingDate: getNextBillingDate(subscription),
+        billingAddress: {
+          addressLine1: subscription.metadata?.addressLine1 || '',
+          addressLine2: subscription.metadata?.addressLine2 || '',
+          city: subscription.metadata?.city || '',
+          state: subscription.metadata?.state || '',
+          zipPostalCode: subscription.metadata?.zipPostalCode || '',
+          country: subscription.metadata?.country || ''
+        },
+        notes: subscription.metadata?.notes || null
       }
     })
 
-    // ── Mirror the subscription's card to the user's saved payment methods ──
-    // On the first payment Stripe has already attached the PaymentMethod to
-    // the customer. Just sync it into our DB so the member portal shows it.
-    if (validUserId && paymentMethodId) {
-      const saveResult = await savePaymentMethod(
-        validUserId,
-        paymentMethodId,
-        true // mark as default since it's an active subscription
-      )
-
-      if (!saveResult.success) {
-        await createLog('error', 'Subscription created but card mirror failed', {
-          orderId: order.id,
-          userId: validUserId,
-          subscriptionId,
-          paymentMethodId,
-          error: saveResult.error
-        })
-        // Don't fail the webhook — the subscription succeeded, that's what matters.
-      }
-    }
-
-    await createLog('info', 'Recurring donation created', {
+    await createLog('info', `Recurring donation ${isFirstPayment ? 'created' : 'renewed'}`, {
       orderId: order.id,
       subscriptionId,
+      invoiceId: invoice.id,
       amount,
-      isFirstPayment: true
+      isFirstPayment
     })
 
-    await sendConfirmationEmail(order, 'RECURRING_DONATION', amount * 100)
+    if (isFirstPayment) {
+      await sendConfirmationEmail(order, 'RECURRING_DONATION', amount * 100)
+    }
 
     const channelId = `payment-${subscriptionId}`
     await pusher.trigger(channelId, 'order-created', {
