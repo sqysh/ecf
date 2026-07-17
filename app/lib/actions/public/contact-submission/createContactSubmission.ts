@@ -8,26 +8,31 @@ import { ContactReadStatus, ContactSubmissionType } from '@prisma/client'
 import { createLog } from '../../createLog'
 
 export const createContactSubmission = async (data: Omit<IContactSubmission, 'id' | 'createdAt' | 'status'>) => {
+  // Honeypot: real users can't see or fill this. Bots do.
+  if (data.website && data.website.trim() !== '') {
+    // Silently succeed so the bot thinks it worked and moves on
+    return { success: true }
+  }
+  // Validate required fields
+  if (!data.firstName?.trim() || !data.lastName?.trim() || !data.email?.trim() || !data.message) {
+    return {
+      success: false,
+      error: 'Missing required fields',
+      data: null
+    }
+  }
+
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(data.email)) {
+    return {
+      success: false,
+      error: 'Invalid email format',
+      data: null
+    }
+  }
+
   try {
-    // Validate required fields
-    if (!data.firstName?.trim() || !data.lastName?.trim() || !data.email?.trim() || !data.message) {
-      return {
-        success: false,
-        error: 'Missing required fields',
-        data: null
-      }
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(data.email)) {
-      return {
-        success: false,
-        error: 'Invalid email format',
-        data: null
-      }
-    }
-
     const submissionData = {
       firstName: data.firstName.trim(),
       lastName: data.lastName.trim(),

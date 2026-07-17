@@ -35,7 +35,8 @@ const ContactForm = () => {
         lastName: inputs?.lastName?.trim(),
         email: inputs?.email?.trim(),
         message: inputs?.message?.trim(),
-        type: inputs.type
+        type: inputs.type,
+        website: inputs.website
       })
 
       store.dispatch(showToast({ message: 'Successfully sent message' }))
@@ -72,6 +73,22 @@ const ContactForm = () => {
       <div className="space-y-5">
         {/* Name row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <input
+            type="text"
+            name="website" // tempting name for bots
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              left: '-9999px',
+              width: '1px',
+              height: '1px',
+              opacity: 0
+            }}
+            value={inputs.website || ''}
+            onChange={handleInput}
+          />
           <TextField
             id="contact-firstName"
             name="firstName"

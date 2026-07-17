@@ -9,6 +9,8 @@ export interface IContactSubmission {
   type: 'SUPPORT' | 'PARTNER' | 'SPONSOR' | 'OTHER'
   status: 'NEW' | 'READ' | 'ARCHIVED'
 
+  website?: string
+
   createdAt?: Date
 }
 
