@@ -1,9 +1,33 @@
-## 📄 License
+<p align="center">
+  <a href="https://sqysh.com?utm_source=github&utm_medium=referral&utm_campaign=ecf">
+    <img src="public/sqysh-animated-purple.gif" alt="Sqysh" width="120" />
+  </a>
+</p>
 
-This project is proprietary and confidential.
+# Education Comes First
 
-**All Rights Reserved** - No part of this codebase may be reproduced, distributed, forked, cloned, or transmitted in any form or by any means without the prior written permission of Education Comes First and Sqysh Development.
+Website and internal management platform for **Education Comes First**.
 
-Unauthorized access, copying, modification, or distribution of this software is strictly prohibited and may result in legal action.
+> Built and maintained by [Sqysh](https://sqysh.com?utm_source=github&utm_medium=referral&utm_campaign=ecf).
 
-© 2026 Education Comes First. All rights reserved.
+---
+
+## Notice
+
+**This is proprietary software.**
+
+The source is visible for reference only. It is _not_ open source, _not_ licensed for
+reuse, and _not_ intended to be cloned, forked, or adapted in whole or in part.
+
+> No permission is granted to copy, modify, distribute, or use this code or any portion
+> of it. All rights reserved.
+
+No issue tracker, no contribution process, no support for third-party use.
+
+Copyright © 2026 Sqysh. All rights reserved.
+
+---
+
+## Contact
+
+[greg@sqysh.com](mailto:greg@sqysh.com)
